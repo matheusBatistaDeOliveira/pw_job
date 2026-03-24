@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./style.css">
+    <link rel="icon" href="https://play-lh.googleusercontent.com/-BnkaUGEENV4Es-ODp3fxpogBD0TRXCe7_swJBdgKBKH3gx0y2vcdZHVI_ETbx6XD9c">
+    <title>Status de Lojas</title>
+</head>
+
+<body>
+
+<section id="CirculosSection">
+    <div class="conjunto conj1">
+        <div class="circle circle1"></div>
+        <div class="circle circle2"></div>
+        <div class="circle circle3"></div>
+    </div>
+
+    <div class="conjunto conj2">
+        <div class="circle circle1"></div>
+        <div class="circle circle2"></div>
+        <div class="circle circle3"></div>
+    </div>
+</section>
+
+
+<header>
+    <a href="#"><img src="./cobasi-logo.png" alt=""></a>
+    <div class="numberShopsBox" id="numberShopsBoxTotal"><p class="numberShops numberShopsTotal">000</p></div>
+    <h1 class="totalH1">TOTAL DE LOJAS</h1>
+</header>
+
+<main>
+    <section id="botoes_de_src">
+        <div class="box_src">
+            <div class="boxBtn button1">
+                <input type="button" id="numberColeta" class="input1" value="🔻" data-target="table-coleta">
+            </div>
+            <h2 class="botoesH2">coleta</h2>
+            <div class="numberShopsBox" id="numberBD-Coleta"><p class="numberShops numberShopsColeta">Loading</p></div>
+            <p class="pCima pDate" >data mais antiga</p>
+            <p id="dateColeta" class="pDate pBaixo">Loading...</p>
+        </div>
+        <div class="box_src">
+            <div class="boxBtn button3">
+                <input type="button" id="numberPendentes" class="input3" value="🔻" data-target="table-pendente">
+            </div>
+            <h2 class="botoesH2">pendentes</h2>
+            <div class="numberShopsBox" id="numberBD-Pendentes"><p class="numberShops numberShopsPendente">Loading</p></div>
+            <p class="pCima pDate" >data mais antiga</p>
+            <p id="datePendente" class="pDate pBaixo">Loading...</p>
+        </div>
+        <div class="box_src">
+            <div class="boxBtn button2">
+                <input type="button" id="numberCriticadas" class="input2" value="🔻" data-target="table-criticada">
+            </div>
+            <h2 class="botoesH2">criticadas</h2>
+            <div class="numberShopsBox" id="numberBD-Criticadas"><p class="numberShops numberShopsCriticada">Loading</p></div>
+            <p class="pCima pDate" >data mais antiga</p>
+            <p id="dateCriticada" class="pDate pBaixo">Loading...</p>
+        </div>
+        <div class="box_src atu">
+            <div class="boxBtn button4">
+                <input type="button" id="numberAtualizadas" class="input4" data-target="table-atualizada" value="🔻">
+            </div>
+            <h2 class="botoesH2">atualizadas</h2>
+            <div class="numberShopsBox" id="numberBD-Atualizadas"><p class="numberShops numberShopsAtualizada">Loading</p></div>
+        </div>
+    </section>
+
+    <section>
+        <table class="table" id="table-coleta"></table>
+    </section>
+
+    <section>
+        <table class="table" id="table-criticada"></table>
+    </section>
+
+    <section>
+        <table class="table" id="table-pendente"></table>
+    </section>
+
+    <section>
+        <table class="table" id="table-atualizada"></table>
+    </section>
+</main>
+
+<p>Os dados são atualizados automaticamente a cada <strong>10</strong> minutos</p>
+<p>O período de análise contempla os últimos <strong>45</strong> dias</p>
+
+<input type="button" id="exp" value ="exp CSV">
+
+<script src="javaScript.js"></script>
+</body>
+</html>

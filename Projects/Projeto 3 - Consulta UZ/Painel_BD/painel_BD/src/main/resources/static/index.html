@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+ 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./style.css">
+    <link rel="icon" href="https://play-lh.googleusercontent.com/-BnkaUGEENV4Es-ODp3fxpogBD0TRXCe7_swJBdgKBKH3gx0y2vcdZHVI_ETbx6XD9c">
+    <title>Status UZ</title>
+</head>
+
+<body>
+
+<section id="CirculosSection">
+    <div class="conjunto conj1">
+        <div class="circle circle1"></div>
+        <div class="circle circle2"></div>
+        <div class="circle circle3"></div>
+    </div>
+
+    <div class="conjunto conj2">
+        <div class="circle circle1"></div>
+        <div class="circle circle2"></div>
+        <div class="circle circle3"></div>
+    </div>
+</section>
+
+
+    <header>
+        <a href="#"><img src="./cobasi-logo.png" alt=""></a>
+        <h1 class="totalH1">CONSULTA STATUS UZ - GS</h1>
+    </header>
+
+    <main>
+        <section id="paiBotoesMain">
+            <div class="boxsMain">
+                <h2 class="botoesH2 h2n1">UZ</h2>
+                <input id="uzPlace" class="containerMainP" type="text" placeholder="PREENCHER" autofocus>
+            </div>
+            <p></p>
+
+            <div class="boxsMain">
+                <h2 class="botoesH2">ORDER</h2>
+                <input id="orderPlace" class="containerMainP" type="text" placeholder="OPCIONAL">
+            </div>
+            <p></p>
+        </section>
+
+        <section>
+            <input class="buttonListar" type="button" value="Listar">
+        </section>
+    </main>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>ORIGEM</th>
+                <th>ORDER_KORBER</th>
+                <th>IMPRESSORA</th>
+                <th>USUARIO</th>
+                <th>UZ</th>
+                <th>GS_STATUS</th>
+                <th>GS_STATUS_MSG</th>
+                <th>TRANSACTIONCODE</th>
+                <th>NOTA</th>
+                <th>GS_DATA_RETORNO_WMS</th>
+                <th>MAPA</th>
+                <th>DESTINO</th>
+            </tr>
+        </thead>
+        <tbody id="tableDados">
+        </tbody>
+    </table>
+
+    <script src="./javaScript.js"></script>
+</body>
+</html>

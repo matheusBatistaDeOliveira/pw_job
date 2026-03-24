@@ -1,0 +1,12 @@
+COBASI =
+(DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = 10.110.167.146)(PORT= 1521))
+      (ADDRESS = (PROTOCOL = TCP)(HOST = 10.110.167.188)(PORT= 1521))
+      (ADDRESS = (PROTOCOL = TCP)(HOST = 10.110.167.132)(PORT= 1521))
+    )
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      	(SERVICE_NAME = cbrms_4pw_gru.subnetexadatali.vcnexadataocisp.oraclevcn.com)
+      )
+  )
