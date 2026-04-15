@@ -163,7 +163,7 @@ async function tables(http, table) {
                 <td>${statusMsg}</td>
                 <td>${func.TRANSACTIONCODE}</td>
                 <td>${func.NOTA}</td>
-                <td>${func.SITUACAO}</td>
+                <td>${func.SITUACAO?.split(" ")[0]} </br> ${func.SITUACAO?.split(" ")[1]}</td>
                 <td>${dataFormatada} às ${horaFormatada}</td>
                 <td>${func.MAPA}</td>
                 <td>${func.DESTINO}</td>
@@ -183,7 +183,7 @@ async function tables(http, table) {
                 <td class="gsMsg-tableErro">${statusMsg}</td>
                 <td>${func.TRANSACTIONCODE}</td>
                 <td>${func.NOTA}</td>
-                <td>${func.SITUACAO}</td>
+                <td>${func.SITUACAO?.split(" ")[0]} </br> ${func.SITUACAO?.split(" ")[1]}</td>
                 <td>${dataFormatada} às ${horaFormatada}</td>
                 <td>${func.MAPA}</td>
                 <td>${func.DESTINO}</td>

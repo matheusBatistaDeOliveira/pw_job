@@ -6,70 +6,27 @@
     font-family: "Montserrat", sans-serif;
 }
 
-.boxBtn{
-    position: absolute;
-    cursor:   default;
-}
-
-.button1 {
-    margin-left: 753px;
-    z-index:     -1;
-}
-
-.button2{
-    margin-left: 242px;
-    z-index:     -1;
-
-}
-
-.button3{
-    margin-left: -350px;
-    z-index:     -1;
-}
-
-.button4{
-    margin-left: -800px;
-    z-index:     -1;
-}
-
-.input1 {
-    margin-left:   -465px;
-
-}
-
-.input2{
-    margin-left:   -209px;
-
-}
-
-.input3{
-    margin-left:    87px;
-}
-
-.input4{
-    margin-left:    320px;
-}
-
 .table{
     border-collapse: collapse;
+    width: 100%;
 }
-
-.table-hidden {
-    display:       none;
-}
-
 
 input{
-    position:      absolute;
     margin:        10px;
     font-size:     10px;
     border:        #ffff;
     border-radius: 3px;
+    padding: 10px;
 }
 
 input:hover{
     background-color: #b4b2b2;
     cursor:           pointer;
+}
+
+#buttons{
+    display: flex;
+    justify-content: center;
 }
 
 img{
@@ -79,17 +36,18 @@ img{
 }
 
 .totalH1{
-    color:         #0199a7;
+    margin-top: 40px;
+    color:         #EE7E00;
     font-weight:   900;
-    margin-bottom: 28px;
+    font-size: 90px;
 }
 
 main{
     margin-top:         50px;
-    width:              1388px;
+    width:              100%;
     height:             545px;
     border-radius:      24px;
-    background-color:   rgba(1,153,167, 0.62);
+    background-color:   rgba(0, 0, 0, 0.62);
     margin-bottom:      39px;
     box-shadow:         0px 3px 4px 0.8px rgba(0, 0, 0, 0.2);
 }
@@ -167,20 +125,24 @@ body{
     overflow-x:        hidden;
 }
 
-.numberShopsBox{
-    display:             flex;
-    width:              148px;
-    height:              33px;
+#numberShopsBoxTotal{
+    width:            350px;
     background-color: #d9d9d9;
-    border-radius:       24px;
-    color:              #3d3d3d;
-    font-size:           21px;
-    font-weight:          700;
-    letter-spacing:       1px;
+    font-size:        66px;
+    padding-bottom:   48px;
 }
 
-.numberShops {
-    padding-top:   4px;
+.numberShopsBox{
+    display:               flex;
+    width:                148px;
+    height:                33px;
+    background-color:   #d9d9d9;
+    border-radius:         24px;
+    color:                #ffff;
+    font-size:             21px;
+    color: rgba(0, 0, 0, 0.726);
+    font-weight:            900;
+    letter-spacing:         1px;
 }
 
 td{
@@ -189,6 +151,7 @@ td{
     margin:        0.1px;
     text-align: center;
     font-size:    12px;
+    border: #ffffff 1px solid;
 }
 
 .loading{
@@ -203,11 +166,12 @@ td{
 }
 
 th{
-    color:              #ffff;
+    color:             #ffff;
     font-size:           12px;
-    padding: 5px;
+    padding:              5px;
     position:        relative;
     text-transform: uppercase;
+    border: #ffffff 1px solid;
 }
 
 tr#topo{
@@ -234,11 +198,12 @@ main{
 }
 
 .tableSection {
-    max-height: 300px;
-    width:      1388px;
+    max-height: 400px;
+    width:      73%;
     overflow-y: scroll;
     overflow-x: hidden;
     border-radius: 2px;
+    margin-bottom: 15px;
 }
 
 .tableSection::-webkit-scrollbar{
@@ -254,13 +219,21 @@ main{
     padding-inline: 20px;
 }
 
-.gsMsg-tableErro{
+.gsMsg{
     font-size: 10px;
+}
+
+.hidden{
+    display: none;
+}
+
+#ctrMsg{
+    padding: 12px;
 }
 
 #exp{
     padding: 12px;
-    position: relative;
+    margin-left: 80px;
 }
 
 #CirculosSection {
@@ -283,7 +256,7 @@ main{
 
 .circle {
     position: absolute;
-    background-color: #d9d9d9;
+    background-color: #000000;
     box-shadow: 0px 3px 0px 0.1px rgba(0, 0, 0, 0.2);
     border-radius: 50%;
     opacity: 90%;

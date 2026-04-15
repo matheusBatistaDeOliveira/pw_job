@@ -1,0 +1,276 @@
+//POM:
+
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>3.5.7</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+	<groupId>com.example</groupId>
+	<artifactId>painel_BD</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>painel_BD</name>
+	<description>Painel de acompanhamento da situação de caixa</description>
+	<url/>
+	<licenses>
+		<license/>
+	</licenses>
+	<developers>
+		<developer/>
+	</developers>
+	<scm>
+		<connection/>
+		<developerConnection/>
+		<tag/>
+		<url/>
+	</scm>
+	<properties>
+		<java.version>17</java.version>
+	</properties>
+	<dependencies>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+		<dependency>
+			<groupId>com.oracle.database.jdbc</groupId>
+			<artifactId>ojdbc6</artifactId>
+            <version>11.2.0.4</version>
+			<scope>runtime</scope>
+		</dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+        </dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+</project>
+
+
+
+
+
+//Properties:
+
+spring.application.name=painel_BD
+spring.datasource.url=jdbc:oracle:thin:@//10.110.167.146:1521/cbrms_4pw_gru.subnetexadatali.vcnexadataocisp.oraclevcn.com
+spring.datasource.username=joao
+spring.datasource.password=080514
+
+server.port=6842
+server.address=0.0.0.0
+
+spring.jpa.properties.hibernate.jdbc.time_zone=America/Sao_Paulo
+spring.jackson.time-zone=America/Sao_Paulo
+spring.jackson.serialization.write-dates-as-timestamps=false
+
+
+
+
+
+
+//Back:
+
+package com.example.painel_BD;
+
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+import java.util.Map;
+
+@RestController
+@CrossOrigin
+public class backEnd {
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    @GetMapping("/tableNAFILA")
+    public ResponseEntity<?> tableFILA() {
+        String sql = """
+                select DISTINCT
+                a.CNPJ_FORNECEDOR  AS ORIGEM,
+                a.CNPJ_TOMADOR AS DESTINO,
+                a.NUMERO_NOTA AS NOTA,
+                a.SERIE,
+                a.EMISSAO,
+                a.CONDICAOPAGTO,
+                a.VALOR_TOTAL AS TOTAL,
+                a.CTRL_RMS_DATA_PROC AS DATA,
+                a.CTRL_GEDI_DATA_IMPORTACAO AS IMPORTACÃO,
+                a.CTRL_RMS_MENSAGEM,
+                a.PROTOCOLO_GEDI,
+                a.FIGURA_FISCAL,
+                a.CFOP,
+                a.PORTADOR
+                from gsretail.gs_integra_gedi_nf a,RMS.aa1cfisc b,(
+                select
+                NUMERO_NOTA AS NOTA,
+                SERIE,
+                VALOR_TOTAL AS TOTAL,
+                MAX(CTRL_RMS_DATA_PROC) AS DATA,
+                FIGURA_FISCAL,
+                PORTADOR
+                from gsretail.gs_integra_gedi_nf, RMS.aa1cfisc
+                where numero_nota = fis_nro_nota(+)
+                    and trim(serie)=trim(fis_serie(+))
+                    and CTRL_RMS_DATA_PROC > sysdate -10
+                group by SERIE, NUMERO_NOTA, VALOR_TOTAL, FIGURA_FISCAL, PORTADOR
+                order by NUMERO_NOTA desc
+                ) c
+                where a.numero_nota = b.fis_nro_nota(+)
+                and trim(a.serie)=trim(b.fis_serie(+))
+                and a.CTRL_RMS_DATA_PROC = c.DATA
+                and nvl(aprovacao_status,0) =  1
+                order by a.CTRL_RMS_DATA_PROC desc
+                FETCH FIRST 500 ROWS ONLY
+                """;
+        return gettingTables(sql);
+    }
+
+    @GetMapping("/totaisAdjust")
+    public ResponseEntity<?> totaisAdjust() {
+        String sql = """
+                SELECT COUNT(DISTINCT NUMERO_NOTA) AS TOTAL
+                FROM gsretail.gs_integra_gedi_nf, RMS.aa1cfisc
+                WHERE numero_nota = fis_nro_nota(+)
+                  AND TRIM(serie) = TRIM(fis_serie(+))
+                  AND nvl(aprovacao_status,0) =  1
+                  AND CTRL_RMS_DATA_PROC > SYSDATE - 10
+                """;
+        return gettingTables(sql);
+    }
+
+    ResponseEntity<?> gettingTables(String sql) {
+        try {
+            List<Map<String, Object>> get = jdbcTemplate.queryForList(sql);
+            return ResponseEntity.ok(get);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Erro ao consultar o banco de dados: " + e.getMessage());
+        }
+    }
+}
+
+
+
+
+
+//API_JAVASCRIPT:
+
+
+//forma 2:
+const local = document.querySelector(`#div-total-NAFILA`);
+
+async function totaisAdjust(TOTALDAFILA=http://172.16.0.190:6842/totaisIncluidedFila, TOTALOUTRO=http://172.16.0.190:6842/totaisIncluidedFila) { //tem vários totais e se um falhar todos falham
+    let data = await fetch(`http://172.16.0.190:6842/totaisIncluidedFila`);
+    data = await data.json();
+
+    //Encontra o API dentre os objetos
+    const objNAFILA = data.find(coluna => coluna.TOTAL);
+
+    local.innerText = objNAFILA?.TOTAL || 0;
+}
+
+
+
+
+
+//Forma 1:
+
+async function tables(http=http://172.16.0.190:6842/tableNAFILA, local=document.querySelector(`#table-NAFILA`)) {
+    try {
+        let linhas = ``;
+        let data = await fetch(http);
+        data = await data.json();
+
+        if (data.length < 1) {
+            local.innerHTML = `<tr><td>Sem dados a carregar...</td></tr>`;
+            return;
+        }else{
+            linhas +=
+                `<tr id="topo">
+                <th>ORIGEM</th>
+                <th>DESTINO</th>
+                <th>NOTA</th>
+                <th>SERIE</th>
+                <th>EMISSÃO</th>
+                <th>CONDICAOPAGTO</th>
+                <th>TOTAL</th>
+                <th>DATA</th>
+                <th>IMPORTACÃO</th>
+                <th>RMS MENSAGEM</th>
+                <th>PROTOCOLO GEDI</th>
+                <th>FIGURA FISCAL</th>
+                <th>CFOP</th>
+                <th>PORTADOR</th>
+                </tr>`;
+            }
+
+        data.forEach(func => {
+
+            linhas +=
+                `<tr>
+                <td>${func.ORIGEM}</td>
+                <td>${func.DESTINO}</td>
+                <td>${func.NOTA}</td>
+                <td>${func.SERIE}</td>
+                <td>${func.DATA}</td>
+                <td>${func.CONDICAOPAGTO}</td>
+                <td>R$${func.TOTAL}</td>
+                <td>${func.IMPORTACAO}</td>
+                <td>${func.RMSMSGS}</td>
+                <td>${func.FATURAMENTO}</td>
+                <td>${func.PROTOCOLO_GEDI}</td>
+                <td>${func.FIGURA_FISCAL}</td>
+                <td>${func.CFOP}</td>
+                <td>${func.PORTADOR}</td>
+                </tr>`;
+        });
+
+
+        local.innerHTML = linhas;
+    } catch (Error) {
+        console.error(`Erro ao carregar a tabela: `, Error);
+        local.innerHTML = `<tr><td>Erro ao carregar dados...</td></tr>`;
+    }
+}
+
+
+async function getTotais() {
+    await totaisAdjust(http://172.16.0.190:6842/totalFila);//tem vários totais aqui
+    await tables(`http://172.16.0.190:6842/tableNAFILA`, tableSelectorNAFILA);
+    await tables(`http://172.16.0.190:6842/tableOUTRA`, tableSelectorOUTRA);
+}
