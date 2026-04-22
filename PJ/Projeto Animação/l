@@ -1,0 +1,55 @@
+@keyframes
+dsd
+{
+    0%{opacity: 0;}
+    100%{opacity: 1;}
+}
+
+
+
+body{
+    display: flex;
+}
+
+div{
+    background-color: black; 
+    animation: dsd 5s ease infinite;
+}
+
+div:nth-child(even){
+    background-color: brown; 
+    animation: dsd 5s ease infinite;
+}
+
+
+@keyframes dsd{
+    0%{
+        width: 0;
+        height: 0;
+        background-color: yellow;
+    }
+    
+    100%{
+        width: 150px;
+        height: 150px;
+    }
+}
+
+
+@keyframes dsd{
+    0%{
+        width: 0;
+        height: 0;
+        background-color: yellow;
+    }
+    
+    50%{
+        background-color: purple;
+        width: 500px;
+    }
+
+    100%{
+        width: 150px;
+        height: 150px;
+    }
+}
