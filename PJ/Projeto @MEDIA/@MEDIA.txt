@@ -1,0 +1,107 @@
+Basicamente
+
+/* Mobile primeiro */
+.container {
+    width: 100%;
+}
+
+/* Tablet */
+@media (min-width: 768px) {
+    .container {
+        width: 80%;
+    }
+}
+
+/* Desktop */
+@media (min-width: 1200px) {
+    .container {
+        width: 60%;
+    }
+}
+
+
+        👌
+👉 Primeiro mobile
+👉 Depois desktop
+
+Isso evita 90% dos problemas.
+
+
+-----
+
+% → para layouts fluidos
+
+flex / grid → para adaptar estrutura
+
+media queries → para ajustar em telas menores
+
+rem → para tipografia e espaçamento consistente
+
+1dvw = 1% da largura da tela(usar no width)
+
+1dvh = 1% da altura da tela(usar no height)
+
+obs:o d de dvw e dvh torna dinâmico alterando o tamanho para quando uma barra scroll aparece ou some, o mesmo para outros elementos como teclado virtual 
+
+--
+
+Guia de Decisão Proporcional
+
+tipografia - rem
+
+espaçamento - rem ou px
+
+largura - % + max-width
+
+container - max-width + margin auto/flexbox
+
+altura tela - dvh/vh
+
+----
+
+Guia de FIGMA leitura
+
+--
+Grossura da Fonte 
+Text-Bold: ?;
+
+Thin        - 100
+Extra Light - 200
+Light       - 300
+Regular     - 400
+Medium      - 500
+Semi Bold   - 600
+Bold        - 700
+Extra Bold  - 800
+Black       - 900
+-----
+
+Seletor por Atributo
+type, name, for - atributos
+
+selector[atributos="valor"]
+
+
+Propriedades do Seletor
+
+^ - começa com
+[attr^="valor"]
+
+* - contém
+[attr*="valor"]
+
+$ - termina com
+[attr$="valor"]
+
+--
+Seletor por estados
+:first-of-type, :focus, :valid - estados
+
+input:focus
+
+
+--
+Mistura de Ambos
+
+input[name^="user"]:focus
+
