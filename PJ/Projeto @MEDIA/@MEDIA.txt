@@ -32,9 +32,9 @@ No Celular
 obs: são completos contrários cel e desktop
 ---------
 
-Ex Não Utilizável:
+Ex Não Utilizável de @media ideal:
 
-@media
+
 
 /* Mobile primeiro */
 .container {
@@ -68,52 +68,6 @@ Ex Não Utilizável:
 👉 Depois desktop
 
 Isso evita 90% dos problemas.
-
---
-Média de Resolução
-geralmente são:
-
-
-min-width
-
-0–480px     - celulares pequenos
-
-481–768px   - celulares grandes/tablets pequenos
-
-768–1024px  - tablets
-
-1024–1280px - notebooks
-
-1280px+     - desktops grandes
-
---
-
-O que mudar no @media
-
-
-você NÃO muda tudo, apenas:
-
-* Tamanhos Exagerados
-* Espaços
-* Alinhamentos
-* Grid/Flex
-* Número de Colunas
-* Largura de Containers
-* Tipografia Muito Pequena/Grande
-
--
-
-Evite ajustar no @media:
-
-* Tudo em px fixo
-* Cada elemento individualmente
-* Pequenas diferenças irrelevantes
-
-Se precisar de 40 media queries:
-
-- layout base foi mal construído
-
-obs: o objetivo deve ser sempre manter o conforto visual e NÃO fazer igual
 
 -----
 
@@ -176,6 +130,57 @@ Bold        - 700
 Extra Bold  - 800
 Black       - 900
 -----
+
+--
+@MEDIA
+Média de Resolução
+
+
+geralmente são:
+
+
+min-width
+
+0–480px     - celulares pequenos
+
+481–768px   - celulares grandes/tablets pequenos
+
+768–1024px  - tablets
+
+*1024–1280px - notebooks
+
+1280px+     - desktops grandes
+
+--
+
+O que mudar no @media
+
+
+você NÃO muda tudo, apenas:
+
+* Tamanhos Exagerados
+* Espaços
+* Alinhamentos
+* Grid/Flex
+* Número de Colunas
+* Largura de Containers
+* Tipografia Muito Pequena/Grande
+
+-
+
+Evite ajustar no @media:
+
+* Tudo em px fixo
+* Cada elemento individualmente
+* Pequenas diferenças irrelevantes
+
+Se precisar de 40 media queries:
+
+- layout base foi mal construído
+
+obs: o objetivo deve ser sempre manter o conforto visual e NÃO fazer igual
+
+----
 
 Seletor por Atributo
 type, name, for - atributos
