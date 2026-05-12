@@ -28,6 +28,7 @@ h1{
     font-size: 2.5rem;
     font-weight: 600;
     color: #000000;
+    text-align: center;
 }
 
 form{
@@ -149,6 +150,10 @@ input[type="submit"]{
         background-color: black;
     }
 
+    h1{
+        text-align: left;
+    }
+
 }
 
 @media(min-width: 1200px){
@@ -180,6 +185,10 @@ input[type="submit"]{
         width: 0.5px;
         border-radius: 25px;
         background-color: black;
+    }
+
+    h1{
+        text-align: left;
     }
 
 }

@@ -1,6 +1,6 @@
 ------------------------------
 *Responsividade*
-
+padding-inline para quando o espaço flex bugar!! 
 ---------
 Ideia
 
@@ -237,3 +237,12 @@ paisagem
 
 orientation: portrait; - em pé
 retrato
+
+-
+
+Outras:
+
+text-transform:uppercase;
+
+padding-inline: 13px;
+padding-left e padding-right ao mesmo tempo
