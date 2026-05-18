@@ -62,12 +62,12 @@ label[for='password']{
     margin-top: 1.31rem;
 }
 
-label[for="a_esqueciSenha"]{
+label[for="esqueciSenhaA"]{
     margin-top: 0.7rem;
     margin-bottom: 1.5rem;
 }
 
-label[for="a_esqueciSenha"]:hover{
+label[for="esqueciSenhaA"]:hover{
     text-decoration: underline;
 }
 

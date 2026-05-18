@@ -14,14 +14,21 @@ public class Service {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    public static Object noUser(){
+        Map<String, String> user = new HashMap<>();
+        user.put("mensagem", "usuário ou senha incorretos");
+
+        return user;
+    }
     @PostMapping("/cadastro")
     public ResponseEntity<?> cadastro(
             @RequestParam String email,
             @RequestParam String password) {
 
-        String sql = """
-                SELECT id, email FROM users WHERE email = ? AND password = ?
-                """;
+        try {
+            String sql = """
+                    SELECT id, email FROM users WHERE email = ? AND password = ?
+                    """;
 
 //        Another Form to return
 //        Map<String, String> data = new HashMap<>();
@@ -31,7 +38,10 @@ public class Service {
 //
 //        return ResponseEntity.ok(data);
 
-        return ResponseEntity.ok(jdbcTemplate.queryForMap(sql, email, password));
+            return ResponseEntity.ok(jdbcTemplate.queryForMap(sql, email, password));
+        }catch(Exception e){
+            return ResponseEntity.ok(noUser());
+        }
     }
 
     @GetMapping("/teste")
