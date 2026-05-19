@@ -1,4 +1,7 @@
-/* //GET
+/*
+ //Forma Local
+
+ //GET
 
 //Passo 1
 //Definir e armazenar tags do HTML
@@ -72,13 +75,8 @@ form.addEventListener('submit', async (e) => {
     //recebe todos os objetos do form em 'dados'
     const dados = new FormData(form);
 
-    let data = await fetch(
-        'http://172.16.0.213:8080/cadastro',
-        {
-            method: 'POST',
-            body: dados
-        }
-    );
+    //let data = await fetch('http://172.16.0.213:8080/cadastro',{method: 'POST',body: dados});
+    let data = await fetch('http://pwjob-production.up.railway.app/cadastro',{method: 'POST',body: dados});
 
     //Passo 3
     //TRATAR API
@@ -102,6 +100,9 @@ form.addEventListener('submit', async (e) => {
 });
 
 
+//-------------------------
+
+
 //Anotar no MySql NUVEM
 //exemplo RailWay
 
@@ -117,3 +118,62 @@ form.addEventListener('submit', async (e) => {
 //spring.datasource.url=jdbc:mysql://@yamabiko.proxy.rlwy.net:37416/railway
 //spring.datasource.username=root
 //spring.datasource.password=lGCZVMuQwXulGzlgNbzCWKbJttSPKcwL
+
+
+
+
+
+//-------------------------
+
+
+
+
+//Anotar Deploy Netlify
+
+//Somente Front, hospedagem na Nuvem, base directory
+//???
+
+
+
+//Base Directory
+//PJ/Projeto @MEDIA/sendly/src/main/resources/static
+
+
+
+//-------------------------
+
+
+
+
+//Anotar Deploy Railway BACKEND
+
+//Projeto Spring inteiro, hospedagem na Nuvem, base directory
+//???
+
+
+
+//Root Directory
+//PJ/Projeto @MEDIA/sendly
+
+//--
+
+//O novo fetch da nuvem deve ser adquirido no Railway:
+//em Projeto>Settings>Networking>Public Networking
+
+//http://pwjob-production.up.railway.app/teste?email=${email}
+//ou
+//http://pwjob-production.up.railway.app/cadastro
+
+//obs: Substitua 172.16.0.213:8080 por pwjob-production.up.railway.app no javaScript.
+//obs: E o application.properties não deve ser 8080.
+
+
+
+//-------------------------
+
+//Anotar Deploy Railway BANCO
+
+//Projeto Spring inteiro, hospedagem na Nuvem, base directory
+//???
+
+//
