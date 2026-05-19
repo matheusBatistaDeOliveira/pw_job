@@ -75,8 +75,8 @@ form.addEventListener('submit', async (e) => {
     //recebe todos os objetos do form em 'dados'
     const dados = new FormData(form);
 
-    //let data = await fetch('http://172.16.0.213:8080/cadastro',{method: 'POST',body: dados});
-    let data = await fetch('http://pwjob-production.up.railway.app/cadastro',{method: 'POST',body: dados});
+    //let data = await fetch('http://172.16.0.213:8080/cadastro',{method: 'POST',body: dados});//forma rede local
+    let data = await fetch('https://pwjob-production.up.railway.app/cadastro',{method: 'POST',body: dados});//forma nuvem
 
     //Passo 3
     //TRATAR API
@@ -166,6 +166,7 @@ form.addEventListener('submit', async (e) => {
 
 //obs: Substitua 172.16.0.213:8080 por pwjob-production.up.railway.app no javaScript.
 //obs: E o application.properties não deve ser 8080.
+//obs: o fetch passa a requisitar https e não mais http.
 
 
 
@@ -177,3 +178,9 @@ form.addEventListener('submit', async (e) => {
 //???
 
 //
+
+
+
+//-------------------------
+
+//Anotar sobre CORS e HTTPS/HTTP
