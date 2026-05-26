@@ -1,0 +1,455 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+*{
+    margin:      0;
+    padding:     0px;
+    font-family: "Montserrat", sans-serif;
+}
+
+.boxBtn{
+    position: absolute;
+    cursor:   default;
+}
+
+.button1 {
+    margin-left: 753px;
+    z-index:     -1;
+}
+
+.button2{
+    margin-left: 242px;
+    z-index:     -1;
+
+}
+
+.button3{
+    margin-left: -350px;
+    z-index:     -1;
+}
+
+.button4{
+    margin-left: -800px;
+    z-index:     -1;
+}
+
+.button5{
+    margin-right: 200px;
+    z-index:     -1;
+}
+
+.input1 {
+    margin-left:   -465px;
+
+}
+
+.input2{
+    margin-left:   -209px;
+
+}
+
+.input3{
+    margin-left:    87px;
+}
+
+.input4{
+    margin-left:    320px;
+}
+
+.input5{
+    margin-right: 330px;
+}
+
+.table{
+    border-collapse: collapse;
+    margin: 0 auto;
+}
+
+.table-hidden {
+    display:       none;
+}
+
+
+input{
+    position:      absolute;
+    margin:        10px;
+    font-size:     10px;
+    border:        #ffff;
+    border-radius: 3px;
+}
+
+input:hover{
+    background-color: #b4b2b2;
+    cursor:           pointer;
+}
+
+img{
+    height:     111px;
+    width:      465px;
+}
+
+main{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top:         1.5rem;
+    padding-inline: 50px;
+    height:             545px;
+    border-radius:      24px;
+    background-color:   rgba(1,153,167, 0.62);
+    margin-bottom:      39px;
+    box-shadow:         0px 3px 4px 0.8px rgba(0, 0, 0, 0.2);
+}
+
+#gs_status_boxSrc{
+    padding-top: 30px;
+    font-size: 30px;
+    display: flex;
+    justify-content: space-between;
+}
+
+#gs_status_boxSrc > h2{
+    letter-spacing: 1px;
+    color:          #ffff;
+    opacity:        100%;
+    font-size: 30px;
+    border-radius: 25px;
+    background-color: #EE7E00;
+    width: 48px;
+    height: 35px;
+    margin-bottom: 10px;
+}
+
+.box_src{
+    display:          block;
+    justify-items:    center;
+    align-items: center;
+    width:            220px;
+    height:           190px;
+    background-color: rgba(1,153,167, 0.62);
+    border-radius:    24px; ;
+    transition:       0.3s;
+    box-shadow:       0px 3px 0px 0.1px rgba(0, 0, 0, 0.2);
+    padding-bottom: 30px;
+    margin-top: 40px;
+    margin-bottom: 35px;
+    padding-inline: 30px;
+}
+
+.box_src:hover{
+    transform:      scale(1.00000000000000000000000000000000001);
+}
+
+#botoes_de_src{
+    display:             flex;
+    gap:10px;
+}
+
+.botoesH2{
+    margin-top: 10px;
+    letter-spacing: 1px;
+    color: #ffff;
+    opacity: 100%;
+    font-size: 17px;
+    text-transform: uppercase;
+}
+
+.cimah2{
+    margin-top: 30px;
+    font-size: 27px;
+}
+
+body{
+    height: 100%;
+    width: 100%;
+    display:            flex;
+    flex-direction: column;
+    align-items:     center;
+    text-align:        center;
+    height:             645px;
+    transform:        scale(0.8);
+    overflow-x:        hidden;
+    margin: 0;
+    
+}
+
+header{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.numberShopsBox{
+    display:             flex;
+    justify-content: center;
+    width:              148px;
+    height:              33px;
+    background-color: #d9d9d9;
+    border-radius:       24px;
+    color:              #3d3d3d;
+    font-size:           21px;
+    font-weight:          700;
+    letter-spacing:       1px;
+    margin-top: 0.6rem;
+}
+
+.numberShopsBoxMain{
+    display: flex;
+    flex-direction: column;
+    height: 90px;
+    padding-inline: 30px;
+    font-size: 50px;
+}
+
+.numberShops {
+    padding-top:   4px;
+}
+
+td{
+    width:       806px;
+    height:       30px;
+    margin:        0.1px;
+    text-align: center;
+    font-size:    12px;
+}
+
+#totaisAcimaSection{
+    display: flex;
+}
+
+.totaisCima{
+    margin-top: 20px;
+    width: 350px;
+    background-color: #d9d9d9;
+    font-size: 66px;
+    padding-bottom: 48px;
+    font-weight: 900;
+}
+
+.ajusteEsquerdo{
+    margin-left: 10px;
+}
+
+.totalH1{
+    color:         #0199a7;
+    font-weight:   900;
+    margin-bottom: 28px;
+}
+
+.loading{
+    color: #ffff;
+    font-weight: 700;
+    animation: moveLoadingWidth linear infinite;
+    align-self: center;
+
+}
+
+#table-original{
+    margin-top:          35px;
+    border-collapse: collapse;
+}
+
+th{ /*.th AQUI*/
+    color:              #ffff;
+    font-size:           12px;
+    padding:              5px;
+    position:        relative;
+    text-transform: uppercase;
+}
+
+tr#topo{
+    position: sticky;
+    top: 0;
+}
+
+tr:nth-child(odd){
+    background-color: #d9d9d9;
+}
+
+tr:nth-child(even){
+    background-color: #ffffff;
+}
+
+th{
+    background-color: #d9d9d9;
+    height:           40px;
+
+}
+
+main{
+    height:         auto;
+    padding-bottom: 20px;
+}
+
+.tableSection {
+    align-self: center;
+    max-height: 300px;
+    width:      1388px;
+    overflow-y: scroll;
+    overflow-x: scroll;
+    background-clip: content-box;
+    border-radius: 2px;
+}
+
+.tableSection::-webkit-scrollbar{
+    width: 8px;
+}
+
+.tableSection::-webkit-scrollbar-thumb{
+    background-color: #d9d9d9;
+    border-radius: 4px;
+}
+
+.tableSection::-webkit-scrollbar-corner{
+    display: none;
+}
+
+.th_gsMsgErro{
+    padding-inline: 20px;
+}
+
+.gsMsg-tableErro{
+    font-size: 10px;
+    text-align: left;
+}
+
+.expButtom{
+    padding: 12px;
+    position: relative;
+}
+
+#buttons{
+    display: flex;
+}
+
+#CirculosSection {
+    position: absolute;
+    width:   100%;
+    height: 600px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index:  -25;
+    pointer-events:none;
+    margin-top:   200px;
+}
+
+.conjunto {
+    position: relative;
+    width:       300px;
+    height:      250px;
+}
+
+.circle {
+    position: absolute;
+    background-color: #d9d9d9;
+    box-shadow: 0px 3px 0px 0.1px rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    opacity: 90%;
+    animation: moveCircleRight 6s ease-in-out infinite;
+}
+
+
+.conj1 .circle1 {
+    width: 214px;
+    height:189px;
+    top:  -369px;
+    left: -100px;
+}
+
+.conj1 .circle2 {
+    width: 101px;
+    height: 91px;
+    top:  -374px;
+    left:  140px;
+}
+
+.conj1 .circle3 {
+    width:  37px;
+    height: 35px;
+    top:  -180px;
+    left:   80px;
+}
+
+
+.conj2 .circle1 {
+    width:  214px;
+    height: 189px;
+    top:   -320px;
+    right: -100px;
+}
+
+.conj2 .circle2 {
+    width: 101px;
+    height: 91px;
+    top:  -240px;
+    right: 137px;
+}
+
+.conj2 .circle3 {
+    width:  37px;
+    height: 35px;
+    top:  -360px;
+    right: 117px;
+}
+
+@keyframes
+moveCircleRight {
+    0%   { transform: translateY(0);   }
+    50%  { transform: translateY(6px); }
+    100% { transform: translateY(0);   }
+}
+
+@keyframes
+moveLoadingWidth {
+    0%   { width: 0%; }
+    100% { width: 100%; }
+}
+
+.conj1 .circle1 { animation-duration: 8s; }
+.conj1 .circle2 { animation-duration: 5s; }
+.conj1 .circle3 { animation-duration: 7s; }
+
+.conj2 .circle1 { animation-duration: 10s; }
+.conj2 .circle2 { animation-duration: 6s;  }
+.conj2 .circle3 { animation-duration: 9s;  }
+
+.loading { animation-duration: 50s;  }
+
+.tableSection {
+    max-height: 300px;
+    width:      1388px;
+    overflow-y: scroll;
+    overflow-x: scroll;
+    padding-bottom: 5px;
+    background-clip: content-box;
+    border-radius: 2px;
+    margin-left: 5px;
+    align-self: center;
+}
+
+.tableSection::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+.tableSection::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.tableSection::-webkit-scrollbar-thumb {
+    background-color: #bfbfbf;
+    border-radius: 10px;
+
+    border: 2px solid transparent;
+    background-clip: content-box;
+}
+
+.adjuste{
+    margin-top: 1.95rem;
+}
+
+.trLoading {
+    margin: 0 auto;
+    text-align: center;
+
+}
