@@ -196,12 +196,18 @@ header{
     display: flex;
     flex-direction: column;
     height: 90px;
-    padding-inline: 30px;
+    padding-right: 30px;
+    padding-left: 30px;
     font-size: 50px;
 }
 
 .numberShops {
     padding-top:   4px;
+}
+
+#btn-SUCCEDED{
+    padding-right: 60px;
+    padding-left: 20px;
 }
 
 td{

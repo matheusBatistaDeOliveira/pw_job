@@ -4,24 +4,22 @@ const totalT851 = document.querySelector(`.numberShops851`);
 const totalT701 = document.querySelector(`.numberShops701`);
 const totalT853 = document.querySelector(`.numberShops853`);
 const totalT700 = document.querySelector(`.numberShops700`);
+const totalTSUCCEDED = document.querySelector(`.numberShopsSUCCEDED`);
 const totalSKUs = document.querySelector(`.totalDesbloqueio`);
 
 
 const tableSelectorT852 = document.querySelector(`#table-t852`);
-const tableSelectorT711 = document.querySelector(`#table-t711`);
+const tableSelectorT711 = document.querySelector(`#table-FAILED`);
 const tableSelectorT851 = document.querySelector(`#table-t851`);
 const tableSelectorT701 = document.querySelector(`#table-t701`);
 const tableSelectorT853 = document.querySelector(`#table-t853`);
 const tableSelectorT700 = document.querySelector(`#table-t700`);
+const tableSelectorSUCCEDED = document.querySelector(`#table-SUCCEDED`);
 const tableSKUsEXP = document.querySelector('#table-SKUs');
 
 
 const tabelas = document.querySelectorAll('.table');
 const secTabelas = document.querySelectorAll('.tableSection');
-
-const LINHAS_VISIVEIS = 30;
-const ALTURA_LINHA = 20;
-
 
 async function totaisAdjust(t852, t711) {
     let data = await fetch(`http://172.16.0.213:6842/totaisAdjust`);
@@ -61,13 +59,12 @@ async function tables(http, table) {
 
         data.forEach(func => {
             if (linhas === ``) {
-                
+
             let dataFormatada = func.DATA_MOVIMENTO?.split("T")[0] || "";
             let horaFormatada = func.DATA_MOVIMENTO?.split("T")[1]?.split(".")[0] || "";
             let statusMsg = func.CTRL_MSG_ENVIO;
             let statusMsg2 = func.GS_DSC_MSG;
-            //<td class="gsMsg-tableErro">${statusMsg2}</td>
-                
+
                 linhas +=
                    `<tr id="topo">
                         <th>DATA</th>
@@ -119,15 +116,18 @@ async function tables(http, table) {
 }
 
 async function getTotais() {
-    await tables(`http://172.16.0.213:6842/t852`, tableSelectorT852);
-    await totais(`http://172.16.0.213:6842/totalSKU`, totalSKUs)
-    await tables(`http://172.16.0.213:6842/t711`, tableSelectorT711);
 
-    await totaisAdjust
+        await totaisAdjust
     (
         totalT852,
         totalT711
     );
+
+    await tables(`http://172.16.0.213:6842/t852`, tableSelectorT852);
+    await totais(`http://172.16.0.213:6842/totalSKU`, totalSKUs);
+    await tables(`http://172.16.0.213:6842/t711`, tableSelectorT711);
+    await totais(`http://172.16.0.213:6842/totalSucesso`, totalTSUCCEDED);
+    await tables(`http://172.16.0.213:6842/tableSucesso`, tableSelectorSUCCEDED);
 }
 
 async function atualizarDadosIntroducao() {
@@ -198,17 +198,5 @@ exp.addEventListener('click', () => {
         tableTarget.exportCSV();
     } catch (error) {
         alert(`abra uma tabela antes de exportar`);
-    }
-});
-
-expSKUs.addEventListener('click', () => {
-    try{
-        if(tableSKUsEXP.innerText.includes('Loading...')){
-            alert("aguarde o carregamento da tabela")
-        }else{
-            tableSKUsEXP.exportCSV();
-        }
-    }catch (error) {
-        alert(`tabela ainda em estado de carregamento, espere antes de exportar`);
     }
 });

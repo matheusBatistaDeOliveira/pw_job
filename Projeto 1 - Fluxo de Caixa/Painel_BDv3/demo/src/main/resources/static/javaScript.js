@@ -134,7 +134,7 @@ async function findTableLojas(url, tabela, campoData, seletorData) {
 
 async function findTotalLojas() {
   try {
-    const response = await fetch('http://172.16.0.185:7872/totalLojas');
+    const response = await fetch('http://172.16.0.213:7872/totalLojas');
     const data = await response.json();
     document.querySelector('#numberShopsBoxTotal p.numberShopsTotal').textContent = data.TOTAL_LOJAS;
   } catch (error) {
@@ -143,7 +143,7 @@ async function findTotalLojas() {
 }
 async function findTotalColeta() {
   try {
-    const response = await fetch('http://172.16.0.185:7872/totalColeta');
+    const response = await fetch('http://172.16.0.213:7872/totalColeta');
     const data = await response.json();
     document.querySelector('#numberBD-Coleta p.numberShopsColeta').textContent = data.COLETADAS_TOTAL;
   } catch (error) {
@@ -152,7 +152,7 @@ async function findTotalColeta() {
 }
 async function findTotalCriticadas() {
   try {
-    const response = await fetch('http://172.16.0.185:7872/totalCriticadas');
+    const response = await fetch('http://172.16.0.213:7872/totalCriticadas');
     const data = await response.json();
     document.querySelector('#numberBD-Criticadas p.numberShopsCriticada').textContent = data.CRITICADAS_TOTAL;
   } catch (error) {
@@ -161,7 +161,7 @@ async function findTotalCriticadas() {
 }
 async function findTotalPendentes() {
   try {
-    const response = await fetch('http://172.16.0.185:7872/totalPendente');
+    const response = await fetch('http://172.16.0.213:7872/totalPendente');
     const data = await response.json();
     document.querySelector('#numberBD-Pendentes p.numberShopsPendentes').textContent = data.PENDENTES_TOTAL;
   } catch (error) {
@@ -170,7 +170,7 @@ async function findTotalPendentes() {
 }
 async function findTotalAtualizadas() {
   try {
-    const response = await fetch('http://172.16.0.185:7872/totalAtualizadas');
+    const response = await fetch('http://172.16.0.213:7872/totalAtualizadas');
     const data = await response.json();
     document.querySelector('#numberBD-Atualizadas p.numberShopsAtualizadas').textContent = data.ATUALIZADAS_TOTAL;
   } catch (error) {
@@ -179,7 +179,7 @@ async function findTotalAtualizadas() {
 }
 
      async function carregarTotais() {
-       const dados = await fetch('http://172.16.0.185:7872/totalAjuste').then(r => r.json());
+       const dados = await fetch('http://172.16.0.213:7872/totalAjuste').then(r => r.json());
 
        const atualizadas = dados.find(i => i.STATUS === 'ATUALIZADA')?.TOTAL ?? 0;
        const criticada   = dados.find(i => i.STATUS === 'CRITICADA')?.TOTAL ?? 0;
@@ -197,25 +197,25 @@ async function findTotalAtualizadas() {
         await findTotalLojas(); // Total de lojas gerais
         await carregarTotais()
         await findTableLojas(
-        'http://172.16.0.185:7872/tabela_coleta',
+        'http://172.16.0.213:7872/tabela_coleta',
         tableColeta,
         'DATA',
         '#dateColeta'
         );
         await findTableLojas(
-        'http://172.16.0.185:7872/tabela_pendentes',
+        'http://172.16.0.213:7872/tabela_pendentes',
         tablePendentes,
         'DATA',
         '#datePendente'
         );
         await findTableLojas(
-        'http://172.16.0.185:7872/tabela_criticadas',
+        'http://172.16.0.213:7872/tabela_criticadas',
         tableCriticadas,
         'DATA',
         '#dateCriticada'
         );
         await findTableLojas(
-        'http://172.16.0.185:7872/tabela_atualizadas',
+        'http://172.16.0.213:7872/tabela_atualizadas',
         tableAtualizadas,
         'DATA',
         null

@@ -1,0 +1,446 @@
+package com.example.demo;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@RestController
+@CrossOrigin
+//allowOriginPatterns = "*"
+//origins = "http://192.168.0.51:1812", allowCredentials = "true"
+public class Teste {
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    /* Total Atualizadas */
+    @GetMapping("/totalAtualizadas")
+    public ResponseEntity<?> totalAtualizadas() {
+
+        LocalDate hoje = LocalDate.now();
+        LocalDate quinzeDiasAtras = hoje.minusDays(15);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyMMdd");
+        String dataHoje = hoje.format(formatter);
+        String dataAnterior = quinzeDiasAtras.format(formatter);
+
+        String sql = """
+                     SELECT count (distinct ctr_loja) atualizadas_Total FROM RMS.AG2VCTRL WHERE CTR_FLAG_ATDC = 'P' AND CTR_DATA_MOV BETWEEN ? AND ?
+                     """;
+
+        Map<String, Object> result = jdbcTemplate.queryForMap(sql, dataAnterior, dataHoje);
+        return ResponseEntity.ok(result);
+    }
+
+    /* Total Lojas */
+    @GetMapping("/totalLojas")
+    public ResponseEntity<?> totalLojas() {
+
+        LocalDate hoje = LocalDate.now();
+        LocalDate quinzeDiasAtras = hoje.minusDays(15);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyMMdd");
+        String dataHoje = hoje.format(formatter);
+        String dataAnterior = quinzeDiasAtras.format(formatter);
+
+        String sql = """
+        SELECT COUNT (distinct CTR_LOJA) TOTAL_LOJAS FROM RMS.AG2VCTRL WHERE CTR_DATA_MOV BETWEEN ? AND ?
+        """;
+
+        Map<String, Object> result = jdbcTemplate.queryForMap(sql, dataAnterior, dataHoje);
+        return ResponseEntity.ok(result);
+    }
+
+    /* Total Coleta */
+    @GetMapping("/totalColeta")
+    public ResponseEntity<?> totalColeta() {
+
+        LocalDate hoje = LocalDate.now();
+        LocalDate quinzeDiasAtras = hoje.minusDays(15);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyMMdd");
+        String dataHoje = hoje.format(formatter);
+        String dataAnterior = quinzeDiasAtras.format(formatter);
+
+        String sql = """
+SELECT count (distinct ctr_loja) coletadas_Total
+ FROM RMS.AG2VCTRL
+WHERE CTR_FLAG_ATDC = 'K'
+      AND Ctr_data_mov >= ?
+      AND Ctr_data_mov <= ?
+      AND CTR_FLAG_INTG = ' '
+      AND CTR_FLAG_QDOC = ' '
+      AND (CTR_FLAG_ATDC = 'K' OR CTR_FLAG_ATDC = ' ')
+                """;
+
+        Map<String, Object> result = jdbcTemplate.queryForMap(sql, dataAnterior, dataHoje);
+        return ResponseEntity.ok(result);
+    }
+
+    /* Total Criticadas */
+    @GetMapping("/totalCriticadas")
+    public ResponseEntity<?> totalCriticadas() {
+
+        LocalDate hoje = LocalDate.now();
+        LocalDate quinzeDiasAtras = hoje.minusDays(15);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyMMdd");
+        String dataHoje = hoje.format(formatter);
+        String dataAnterior = quinzeDiasAtras.format(formatter);
+
+        String sql = """
+                SELECT count (distinct ctr_loja) CRITICADAS_TOTAL FROM RMS.AG2VCTRL WHERE CTR_FLAG_ATDC <> 'P' AND CTR_FLAG_CRIT = 'F' AND CTR_DATA_MOV BETWEEN ? AND ?
+                """;
+
+        Map<String, Object> result = jdbcTemplate.queryForMap(sql, dataAnterior, dataHoje);
+        return ResponseEntity.ok(result);
+    }
+
+    /* Total Pendentes */
+    @GetMapping("/totalPendentes")
+    public ResponseEntity<?> totalPendentes() {
+
+        LocalDate hoje = LocalDate.now();
+        LocalDate quinzeDiasAtras = hoje.minusDays(15);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyMMdd");
+        String dataHoje = hoje.format(formatter);
+        String dataAnterior = quinzeDiasAtras.format(formatter);
+
+        String sql = """
+SELECT count (distinct ctr_loja) pendentes_Total
+  FROM RMS.AG2VCTRL
+WHERE CTR_FLAG_ATDC = ' '
+    AND CTR_FLAG_CRIT = ' '
+    AND Ctr_data_mov >= ?
+    AND Ctr_data_mov <= ?
+    AND ((CTR_FLAG_INTG = ' ') OR (CTR_FLAG_INTG = 'I' AND CTR_FLAG_QDOC = 'D'))
+    AND ((CTR_FLAG_QDOC = 'D') OR (CTR_FLAG_QDOC = ' ' AND CTR_FLAG_INTG = 'I'))
+                """;
+
+        Map<String, Object> result = jdbcTemplate.queryForMap(sql, dataAnterior, dataHoje);
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/tabela_atualizadas")
+    public ResponseEntity<?> tabela_atualizadas() {
+
+        LocalDate hoje = LocalDate.now();
+        LocalDate quinzeDiasAtras = hoje.minusDays(15);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyMMdd");
+        String dataAnterior = quinzeDiasAtras.format(formatter);
+        String dataHoje = hoje.format(formatter);
+
+        String sql = """
+        SELECT*FROM(
+        SELECT case CTR_FLAG_ATDC
+                 when 'K' THEN 'COL'
+                 when 'P' THEN 'ATU'
+                 when ' ' THEN 'PEND'
+               end SITUACAO,
+               CTR_FLAG_INTG as I,
+               CTR_FLAG_QDOC as D,
+               case CTR_FLAG_CRIT
+                 when 'F' THEN 'C'
+               end as C,
+               TIP_CODIGO || '-' || TIP_DIGITO as FILIAL,
+               TIP_NOME_FANTASIA as NOME,
+               tip_estado as UF,
+               to_date(CTR_DATA_MOV, 'YY/MM/DD') as DATA,
+               CTR_NUMSEQ_INI as MAPA,
+               CTR_AUTONOMIA as AUTONOMIA,
+               ROW_NUMBER() OVER (PARTITION BY TIP_NOME_FANTASIA ORDER BY CTR_DATA_MOV desc) as RN
+          FROM RMS.AG2VCTRL, RMS.AA2CTIPO, RMS.AA2CTABE
+         WHERE TAB_CODIGO(+) = 45
+           AND TAB_ACESSO(+) = to_char(TRUNC(CTR_LOJA / 10), 'fm0000000') || 'PV2'
+           AND TIP_CODIGO <= 500
+           AND Ctr_data_mov >= ?
+           AND Ctr_data_mov <= ?
+           AND TIP_CODIGO = TRUNC(CTR_LOJA / 10)
+           AND TIP_DIGITO = RMS.DAC(TRUNC(CTR_LOJA / 10))
+           AND CTR_FLAG_ATDC = 'P'
+         ORDER BY RMS.adiciona_seculo(CTR_DATA_MOV) desc)
+        WHERE RN = 1
+        ORDER BY DATA desc
+    """;
+
+        List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql, dataAnterior, dataHoje
+                );
+
+        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        List<Map<String, Object>> formattedList = resultList.stream().map(row -> {
+            Map<String, Object> newRow = new HashMap<>(row);
+            Object dataObj = row.get("DATA");
+            if (dataObj != null) {
+                LocalDate date = null;
+                if (dataObj instanceof java.sql.Date) {
+                    date = ((java.sql.Date) dataObj).toLocalDate();
+                } else if (dataObj instanceof java.sql.Timestamp) {
+                    date = ((java.sql.Timestamp) dataObj).toLocalDateTime().toLocalDate();
+                } else if (dataObj instanceof java.util.Date) {
+                    date = ((java.util.Date) dataObj).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                }
+                newRow.put("DATA", date != null ? date.format(outputFormatter) : null);
+            } else {
+                newRow.put("DATA", null);
+            }
+            return newRow;
+        }).toList();
+
+        return ResponseEntity.ok(formattedList);
+    }
+
+
+    @GetMapping("/tabela_criticadas")
+
+
+
+    public ResponseEntity<?> tabela_criticadas() {
+
+        LocalDate hoje = LocalDate.now();
+        LocalDate quinzeDiasAtras = hoje.minusDays(15);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyMMdd");
+        String dataAnterior = quinzeDiasAtras.format(formatter);
+        String dataHoje = hoje.format(formatter);
+
+    	String sql ="""
+        SELECT*FROM(
+        SELECT case CTR_FLAG_ATDC
+                 when 'K' THEN 'COL'
+                 when 'P' THEN 'ATU'
+                 when ' ' THEN 'PEND'
+               end SITUACAO,
+               CTR_FLAG_INTG as I,
+               CTR_FLAG_QDOC as D,
+               case CTR_FLAG_CRIT
+                 when 'F' THEN 'C'
+               end as C,
+               TIP_CODIGO || '-' || TIP_DIGITO as FILIAL,
+               TIP_NOME_FANTASIA as NOME,
+               tip_estado as UF,
+               to_date(CTR_DATA_MOV, 'YY/MM/DD') as DATA,
+               CTR_NUMSEQ_INI as MAPA,
+               CTR_AUTONOMIA as AUTONOMIA,
+               ROW_NUMBER() OVER (PARTITION BY TIP_NOME_FANTASIA ORDER BY CTR_DATA_MOV desc) as RN
+          FROM RMS.AG2VCTRL, RMS.AA2CTIPO, RMS.AA2CTABE
+         WHERE TAB_CODIGO(+) = 45
+           AND TAB_ACESSO(+) = to_char(TRUNC(CTR_LOJA / 10), 'fm0000000') || 'PV2'
+           AND TIP_CODIGO <= 500
+           AND Ctr_data_mov >= ?
+           AND Ctr_data_mov <= ?
+           AND TIP_CODIGO = TRUNC(CTR_LOJA / 10)
+           AND TIP_DIGITO = RMS.DAC(TRUNC(CTR_LOJA / 10))
+    	   AND CTR_FLAG_ATDC <> 'P'
+    	   AND CTR_FLAG_CRIT = 'F'
+         ORDER BY RMS.adiciona_seculo(CTR_DATA_MOV) desc)
+        WHERE RN = 1
+        ORDER BY DATA desc
+    			""";
+
+        List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql, dataAnterior, dataHoje
+        );
+
+        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        List<Map<String, Object>> formattedList = resultList.stream().map(row -> {
+            Map<String, Object> newRow = new HashMap<>(row);
+            Object dataObj = row.get("DATA");
+            if (dataObj != null) {
+                LocalDate date = null;
+                if (dataObj instanceof java.sql.Date) {
+                    date = ((java.sql.Date) dataObj).toLocalDate();
+                } else if (dataObj instanceof java.sql.Timestamp) {
+                    date = ((java.sql.Timestamp) dataObj).toLocalDateTime().toLocalDate();
+                } else if (dataObj instanceof java.util.Date) {
+                    date = ((java.util.Date) dataObj).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                }
+                newRow.put("DATA", date != null ? date.format(outputFormatter) : null);
+            } else {
+                newRow.put("DATA", null);
+            }
+            return newRow;
+        }).toList();
+
+        return ResponseEntity.ok(formattedList);
+    }
+
+    @GetMapping("/tabela_coleta")
+    public ResponseEntity<?> tabela_coleta() {
+
+        LocalDate hoje = LocalDate.now();
+        LocalDate quinzeDiasAtras = hoje.minusDays(15);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyMMdd");
+        String dataAnterior = quinzeDiasAtras.format(formatter);
+        String dataHoje = hoje.format(formatter);
+
+        String sql = """
+SELECT case CTR_FLAG_ATDC
+         when 'K' THEN
+          'COL'
+         when 'P' THEN
+          'ATU'
+         when ' ' THEN
+          'PEND'
+       end SITUACAO,
+       CTR_FLAG_INTG as I,
+       CTR_FLAG_QDOC as D,
+       case CTR_FLAG_CRIT
+         when 'F' THEN
+          'C'
+       end as C,
+       TIP_CODIGO || '-' || TIP_DIGITO as FILIAL,
+       TIP_NOME_FANTASIA as NOME,
+       tip_estado as UF,
+       to_date(CTR_DATA_MOV, 'yy/MM/dd') as DATA,
+       CTR_NUMSEQ_INI as MAPA,
+       CTR_AUTONOMIA as AUTONOMIA
+  FROM RMS.AG2VCTRL, RMS.AA2CTIPO, RMS.AA2CTABE
+WHERE TAB_CODIGO(+) = 45
+   AND TAB_ACESSO(+) = to_char(TRUNC(CTR_LOJA / 10), 'fm0000000') || 'PV2'
+   AND TIP_CODIGO <= 500
+   AND Ctr_data_mov >= ?
+   AND Ctr_data_mov <= ?
+   AND CTR_FLAG_INTG = ' '
+   AND CTR_FLAG_QDOC = ' '
+   AND TIP_CODIGO = TRUNC(CTR_LOJA / 10)
+   AND TIP_DIGITO = RMS.DAC(TRUNC(CTR_LOJA / 10))
+   AND (CTR_FLAG_ATDC = 'K' OR CTR_FLAG_ATDC = ' ')
+ORDER BY RMS.adiciona_seculo(CTR_DATA_MOV) desc
+    """;
+
+        List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql, dataAnterior, dataHoje
+        );
+
+        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        List<Map<String, Object>> formattedList = resultList.stream().map(row -> {
+            Map<String, Object> newRow = new HashMap<>(row);
+            Object dataObj = row.get("DATA");
+            if (dataObj != null) {
+                LocalDate date = null;
+                if (dataObj instanceof java.sql.Date) {
+                    date = ((java.sql.Date) dataObj).toLocalDate();
+                } else if (dataObj instanceof java.sql.Timestamp) {
+                    date = ((java.sql.Timestamp) dataObj).toLocalDateTime().toLocalDate();
+                } else if (dataObj instanceof java.util.Date) {
+                    date = ((java.util.Date) dataObj).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                }
+                newRow.put("DATA", date != null ? date.format(outputFormatter) : null);
+            } else {
+                newRow.put("DATA", null);
+            }
+            return newRow;
+        }).toList();
+
+        return ResponseEntity.ok(formattedList);
+    }
+    @GetMapping("/tabela_pendentes")
+    public ResponseEntity<?> tabela_pendentes() {
+
+        LocalDate hoje = LocalDate.now();
+        LocalDate quinzeDiasAtras = hoje.minusDays(15);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyMMdd");
+        String dataAnterior = quinzeDiasAtras.format(formatter);
+        String dataHoje = hoje.format(formatter);
+
+        String sql ="""
+SELECT case CTR_FLAG_ATDC
+         when 'K' THEN
+          'COL'
+         when 'P' THEN
+          'ATU'
+         when ' ' THEN
+          'PEND'
+       end SITUACAO,
+       CTR_FLAG_INTG as I,
+       CTR_FLAG_QDOC as D,
+       case CTR_FLAG_CRIT
+         when 'F' THEN
+          'C'
+       end as C,
+       TIP_CODIGO || '-' || TIP_DIGITO as FILIAL,
+       TIP_NOME_FANTASIA as NOME,
+       tip_estado as UF,
+       to_date(CTR_DATA_MOV, 'yy/MM/dd') as DATA,
+       CTR_NUMSEQ_INI as MAPA,
+       CTR_AUTONOMIA as AUTONOMIA
+  FROM RMS.AG2VCTRL, RMS.AA2CTIPO, RMS.AA2CTABE
+WHERE TAB_CODIGO(+) = 45
+   AND TAB_ACESSO(+) = to_char(TRUNC(CTR_LOJA / 10), 'fm0000000') || 'PV2'
+   AND TIP_CODIGO <= 500
+   AND Ctr_data_mov >= ?
+   AND Ctr_data_mov <= ?
+   AND TIP_CODIGO = TRUNC(CTR_LOJA / 10)
+   AND TIP_DIGITO = RMS.DAC(TRUNC(CTR_LOJA / 10))
+   AND CTR_FLAG_ATDC = ' '
+   AND CTR_FLAG_CRIT = ' '
+   AND ((CTR_FLAG_INTG = ' ') OR (CTR_FLAG_INTG = 'I' AND CTR_FLAG_QDOC = 'D'))
+   AND ((CTR_FLAG_QDOC = 'D') OR (CTR_FLAG_QDOC = ' ' AND CTR_FLAG_INTG = 'I'))
+ORDER BY RMS.adiciona_seculo(CTR_DATA_MOV) desc
+    			""";
+
+        List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql, dataAnterior, dataHoje
+        );
+
+        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        List<Map<String, Object>> formattedList = resultList.stream().map(row -> {
+            Map<String, Object> newRow = new HashMap<>(row);
+            Object dataObj = row.get("DATA");
+            if (dataObj != null) {
+                LocalDate date = null;
+                if (dataObj instanceof java.sql.Date) {
+                    date = ((java.sql.Date) dataObj).toLocalDate();
+                } else if (dataObj instanceof java.sql.Timestamp) {
+                    date = ((java.sql.Timestamp) dataObj).toLocalDateTime().toLocalDate();
+                } else if (dataObj instanceof java.util.Date) {
+                    date = ((java.util.Date) dataObj).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                }
+                newRow.put("DATA", date != null ? date.format(outputFormatter) : null);
+            } else {
+                newRow.put("DATA", null);
+            }
+            return newRow;
+        }).toList();
+
+        return ResponseEntity.ok(formattedList);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    private ResponseEntity<?> executeCountQuery(String sql) {
+        try {
+            Map<String, Object> resultado = jdbcTemplate.queryForMap(sql);
+            return ResponseEntity.ok(resultado); // já vem no formato { "count": 123 }
+        } catch (EmptyResultDataAccessException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("count", 0));
+        } catch (DataAccessException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("erro", "Erro interno ao buscar os dados.", "detalhe", e.getMessage()));
+        }
+    }
+}
