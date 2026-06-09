@@ -1,0 +1,128 @@
+DOM
+HTML e CSS
+--------------------
+HTML
+
+----
+QuerySelector
+Trazer do HTML
+
+
+Exemplo Teórico 
+tipo variável = document.querySelector(".#Seletor");
+tipo variável = document.querySelectorAll(".#Seletor");
+
+Exemplo Prático
+const loading = document.querySelector("h1");
+const loading = document.querySelectorAll("h1");
+
+obs: Isto armazena o seletor html
+----
+Utilização
+
+-
+Form Unique
+const loading = document.querySelector("h1");
+loading.innerHTML = "oi";
+
+
+obs: se houver mais de um, funciona somente no primeiro
+
+--
+Com Array
+
+-
+Forma Reference
+const loading = document.querySelectorAll("h1");
+for(const a of loading){
+    a.innerHTML = "oi";
+};
+
+-
+Forma forEach
+const loading = document.querySelectorAll("h1");
+loading.forEach(a => {
+    a.innerHTML = "oi";
+});
+
+----
+Métodos
+
+.innerHTML - Adiciona Contéudo
+.innerText - Adiciona Contéudo String
+.style - Libera propriedades CSS
+
+.replace() - Troca parte do conteúdo por outro
+
+.classlist
+.toggle - .add .remove juntos
+
+--
+style
+propriedades e métodos
+
+style.color = "red"
+style.width = "10%"
+style.fontSize = "16rem"
+etc...
+
+--
+innerHTML ou innerText
+variavel.innerHTML = "texto";
+
+obs:innertext não entende tags html
+
+--
+replace()
+
+-
+método de texto
+
+Exemplo Teórico
+variavel.innerHTML = variavel.innerText.replace("anterior", "posterior")
+
+Exemplo Prático
+loading.innerHTML = loading.innerHTML.replace("(11)977139040", "977139040")
+or
+loading.innetText = loading.innerText.replace("(11)", "")
+
+obs: 
+replace só pode ser usado em texto, portanto devesse usar innerText ou innerHTML para liberá-lo
+loading.innerHTML = loading.innerText.replace("bom", "ruim");
+
+-
+popriedades da seleção
+replace(essaParte, "")
+
+LIKE '%ana%'     é /ana/gi
+LIKE 'ana%'	     é /^ana/gi
+LIKE '%ana'	     é /ana$/gi
+LIKE '_M'	     é /.M/gi
+LIKE '__'	     é /../gi
+NOT LIKE '%ana%' é !texto.match(/ana/)
+
+
+// - Diz contém e permite usar propriedades adversas(mas para na primeira)
+/ana/i - "i" ignora se é maiúscula ou minúscula
+/ana/g - "g" faz se aplicar a todos do "//"
+/.n/ - "." caractere antes de n
+/../ - dois caracteres(por padrão os primeiros)
+/^ana/ - Começa com
+/ana$/ - Termina com
+!texto.match(/ana/ig) - Tudo que não contém ana sem case sensitive e seleciona todos 
+/[0-9]/ - Qualquer número
+/[^0-9]/ - Tudo que não for número
+/\s/ - Qualquer espaço que não quebra de linha
+
+obs: escrever errado seleciona TUDO no replace
+
+--------------------
+Métodos Soltos
+
+Métodos
+setInterval(function, milisegundos); - ativa uma função continualmente por um intervalo
+
+Páginas
+location.reload(); - Atualiza a página
+location.href = "http ou ./pagina.html"; - Atualiza para outra página
+window.open("http ou ./pagina.html") - Abre numa outra janela
