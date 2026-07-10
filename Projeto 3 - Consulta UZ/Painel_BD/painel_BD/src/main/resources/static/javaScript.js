@@ -34,7 +34,7 @@ buttonListar.addEventListener('click', () => {
         return;
     }
 
-    const url = `http://192.168.0.51:1911/valuesOfSearch?uz=${uzValue}&order=${orderValue}`;
+    const url = `http://172.16.0.197:1911/valuesOfSearch?uz=${uzValue}&order=${orderValue}`;
 
     fetch(url)
         .then(resp => resp.json())

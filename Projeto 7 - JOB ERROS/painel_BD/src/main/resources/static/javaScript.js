@@ -23,7 +23,7 @@ const tabelas = document.querySelectorAll('.table');
 const secTabelas = document.querySelectorAll('.tableSection');
 
 async function totaisAdjust(t852, t711) {
-    let data = await fetch(`http://172.16.0.213:6842/totaisAdjust`);
+    let data = await fetch(`http://172.16.0.197:6842/totaisAdjust`);
     data = await data.json();
 
     const obj852 = data.find(array => array.STATUS === "STOPPED");
@@ -136,11 +136,11 @@ async function getTotais() {
         totalT711
     );
 
-    await tables(`http://172.16.0.213:6842/t852`, tableSelectorT852);
-    await totais(`http://172.16.0.213:6842/totalSKU`, totalSKUs);
-    await tables(`http://172.16.0.213:6842/t711`, tableSelectorT711);
-    await totais2(`http://172.16.0.213:6842/totalSucesso`, totalTSUCCEDED, totalDesbloqueado);
-    await tables(`http://172.16.0.213:6842/tableSucesso`, tableSelectorSUCCEDED);
+    await tables(`http://172.16.0.197:6842/t852`, tableSelectorT852);
+    await totais(`http://172.16.0.197:6842/totalSKU`, totalSKUs);
+    await tables(`http://172.16.0.197:6842/t711`, tableSelectorT711);
+    await totais2(`http://172.16.0.197:6842/totalSucesso`, totalTSUCCEDED, totalDesbloqueado);
+    await tables(`http://172.16.0.197:6842/tableSucesso`, tableSelectorSUCCEDED);
 }
 
 async function atualizarDadosIntroducao() {

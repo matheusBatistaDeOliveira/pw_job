@@ -38,11 +38,39 @@ public class Teste {
         String dataAnterior = quinzeDiasAtras.format(formatter);
 
         String sql = """
-        SELECT count (distinct ctr_loja) atualizadas_Total
-          FROM RMS.AG2VCTRL 
-         WHERE CTR_FLAG_ATDC = 'P' 
-           AND Ctr_data_mov >= ? 
-           AND Ctr_data_mov <= ?
+                select count(*) ATUALIZADAS_TOTAL from (
+                select
+                  'ATUALIZADA' AS STATUS,
+                  b.ctr_loja,
+                  TO_DATE(b.ctr_data_mov, 'yy/MM/dd') as DATA,
+                  a.CTR_NUMSEQ_INI as MAPA,
+                  a.CTR_AUTONOMIA as AUTONOMIA,
+                  c.TIP_CODIGO || '-' || c.TIP_DIGITO as FILIAL,
+                  c.tip_estado as UF,
+                  c.TIP_NOME_FANTASIA as NOME
+                  from (
+                   select
+                    ctr_loja,
+                    max(ctr_data_mov) ctr_data_mov
+                     from RMS.AG2VCTRL
+                    GROUP BY ctr_loja
+                    ) b, RMS.AG2VCTRL a, RMS.AA2CTIPO c--, RMS.AA2CTABE d
+                     WHERE b.ctr_data_mov = a.ctr_data_mov
+                      AND b.ctr_loja = a.ctr_loja
+                      AND c.TIP_CODIGO = TRUNC(a.CTR_LOJA / 10)
+                      AND c.TIP_DIGITO = RMS.DAC(TRUNC(a.CTR_LOJA / 10))
+                      AND a.ctr_data_mov BETWEEN ? AND ?
+                      --AND TO_CHAR(a.CTR_NUMSEQ_INI) NOT LIKE '%4391%'
+                      AND CTR_DATA <> 0
+                     GROUP BY
+                      b.ctr_loja,
+                      b.ctr_data_mov,
+                      a.CTR_NUMSEQ_INI,
+                      a.CTR_AUTONOMIA,
+                      c.TIP_CODIGO || '-' || c.TIP_DIGITO,
+                      c.tip_estado,
+                      c.TIP_NOME_FANTASIA
+                     ORDER BY b.CTR_DATA_MOV desc)
         """;
 
         Map<String, Object> result = jdbcTemplate.queryForMap(sql, dataAnterior, dataHoje);
@@ -61,13 +89,52 @@ public class Teste {
         String dataAnterior = quinzeDiasAtras.format(formatter);
 
         String sql = """
-        SELECT count (distinct CTR_LOJA) TOTAL_LOJAS
-          FROM RMS.AG2VCTRL
-         WHERE Ctr_data_mov >= 251201
-           AND Ctr_data_mov <= ?
+                select count(*) TOTAL_LOJAS from (
+                select
+                 CASE
+                    WHEN a.CTR_FLAG_ATDC = 'K' THEN 'COLETA'
+                    WHEN a.CTR_FLAG_ATDC = 'P' THEN 'ATUALIZADA'
+                    WHEN a.CTR_FLAG_CRIT = 'F' AND a.CTR_FLAG_ATDC <> 'P' THEN 'CRITICADA'
+                    WHEN a.CTR_FLAG_ATDC = ' ' AND a.CTR_FLAG_CRIT = ' ' THEN 'PENDENTE'
+                  END AS STATUS,
+                  b.ctr_loja,
+                  TO_DATE(b.ctr_data_mov, 'yy/MM/dd') as DATA,
+                  a.CTR_NUMSEQ_INI as MAPA,
+                  a.CTR_AUTONOMIA as AUTONOMIA,
+                  c.TIP_CODIGO || '-' || c.TIP_DIGITO as FILIAL,
+                  c.tip_estado as UF,
+                  c.TIP_NOME_FANTASIA as NOME
+                  from (
+                   select
+                    ctr_loja,
+                    max(ctr_data_mov) ctr_data_mov
+                     from RMS.AG2VCTRL
+                    GROUP BY ctr_loja
+                    ) b, RMS.AG2VCTRL a, RMS.AA2CTIPO c--, RMS.AA2CTABE d
+                     WHERE b.ctr_data_mov = a.ctr_data_mov
+                      AND b.ctr_loja = a.ctr_loja
+                      AND c.TIP_CODIGO = TRUNC(a.CTR_LOJA / 10)
+                      AND c.TIP_DIGITO = RMS.DAC(TRUNC(a.CTR_LOJA / 10))
+                      AND a.ctr_data_mov BETWEEN ? AND ?
+                      --AND TO_CHAR(a.CTR_NUMSEQ_INI) NOT LIKE '%4391%'
+                     GROUP BY
+                     CASE
+                         WHEN a.CTR_FLAG_ATDC = 'K' THEN 'COLETA'
+                         WHEN a.CTR_FLAG_ATDC = 'P' THEN 'ATUALIZADA'
+                         WHEN a.CTR_FLAG_CRIT = 'F' AND a.CTR_FLAG_ATDC <> 'P' THEN 'CRITICADA'
+                         WHEN a.CTR_FLAG_ATDC = ' ' AND a.CTR_FLAG_CRIT = ' ' THEN 'PENDENTE'
+                      END,
+                      b.ctr_loja,
+                      b.ctr_data_mov,
+                      a.CTR_NUMSEQ_INI,
+                      a.CTR_AUTONOMIA,
+                      c.TIP_CODIGO || '-' || c.TIP_DIGITO,
+                      c.tip_estado,
+                      c.TIP_NOME_FANTASIA
+                     ORDER BY b.CTR_DATA_MOV desc)
         """;
 
-        Map<String, Object> result = jdbcTemplate.queryForMap(sql, dataHoje);
+        Map<String, Object> result = jdbcTemplate.queryForMap(sql, dataAnterior, dataHoje);
         return ResponseEntity.ok(result);
     }
 
@@ -83,14 +150,43 @@ public class Teste {
         String dataAnterior = quinzeDiasAtras.format(formatter);
 
         String sql = """
-        SELECT count (distinct ctr_loja) coletadas_Total
-         FROM RMS.AG2VCTRL
-        WHERE Ctr_data_mov >= ?
-          AND Ctr_data_mov <= ?
-          AND CTR_FLAG_INTG = ' '
-          AND CTR_FLAG_QDOC = ' '
-          AND CTR_FLAG_CRIT <> 'F'
-          AND (CTR_FLAG_ATDC = 'K' OR CTR_FLAG_ATDC = ' ')
+                select count(*) COLETADAS_TOTAL from (
+                select
+                  'COLETA' AS STATUS,
+                  b.ctr_loja,
+                  TO_DATE(b.ctr_data_mov, 'yy/MM/dd') as DATA,
+                  a.CTR_NUMSEQ_INI as MAPA,
+                  a.CTR_AUTONOMIA as AUTONOMIA,
+                  c.TIP_CODIGO || '-' || c.TIP_DIGITO as FILIAL,
+                  c.tip_estado as UF,
+                  c.TIP_NOME_FANTASIA as NOME
+                  from (
+                   select
+                    ctr_loja,
+                    max(ctr_data_mov) ctr_data_mov
+                     from RMS.AG2VCTRL
+                    GROUP BY ctr_loja
+                    ) b, RMS.AG2VCTRL a, RMS.AA2CTIPO c--, RMS.AA2CTABE d
+                     WHERE b.ctr_data_mov = a.ctr_data_mov
+                      AND b.ctr_loja = a.ctr_loja
+                      AND c.TIP_CODIGO = TRUNC(a.CTR_LOJA / 10)
+                      AND c.TIP_DIGITO = RMS.DAC(TRUNC(a.CTR_LOJA / 10))
+                      AND a.ctr_data_mov BETWEEN ? AND ?
+                      --AND TO_CHAR(a.CTR_NUMSEQ_INI) NOT LIKE '%4391%'
+                      AND CTR_DATA = 0
+                      AND CTR_FLAG_ATDC in ('K', ' ')
+                      AND CTR_FLAG_CRIT NOT in ('F')
+                      AND CTR_FLAG_QDOC = ' ' AND CTR_FLAG_INTG = ' '
+                     GROUP BY
+                      b.ctr_loja,
+                      b.ctr_data_mov,
+                      a.CTR_NUMSEQ_INI,
+                      a.CTR_AUTONOMIA,
+                      c.TIP_CODIGO || '-' || c.TIP_DIGITO,
+                      c.tip_estado,
+                      c.TIP_NOME_FANTASIA
+                     ORDER BY b.CTR_DATA_MOV desc
+                     )
         """;
 
         Map<String, Object> result = jdbcTemplate.queryForMap(sql, dataAnterior, dataHoje);
@@ -109,12 +205,40 @@ public class Teste {
         String dataAnterior = quinzeDiasAtras.format(formatter);
 
         String sql = """
-        SELECT count (distinct ctr_loja) CRITICADAS_TOTAL 
-          FROM RMS.AG2VCTRL 
-         WHERE CTR_FLAG_ATDC <> 'P' 
-           AND CTR_FLAG_CRIT = 'F' 
-           AND Ctr_data_mov >= ?
-           AND Ctr_data_mov <= ?
+          select count(*) CRITICADAS_TOTAL from (
+          select
+          'CRITICADA' AS STATUS,
+          a.ctr_loja,
+          TO_DATE(a.ctr_data_mov, 'yy/MM/dd') as DATA,
+          a.CTR_NUMSEQ_INI as MAPA,
+          a.CTR_AUTONOMIA as AUTONOMIA,
+          c.TIP_CODIGO || '-' || c.TIP_DIGITO as FILIAL,
+          c.tip_estado as UF,
+          c.TIP_NOME_FANTASIA as NOME
+          from (
+             SELECT * FROM RMS.AG2VCTRL WHERE CTR_DATA =  RMS.DATETO_RMS7(SYSDATE - 1)
+             union
+             SELECT * FROM RMS.AG2VCTRL WHERE CTR_DATA = 0
+          ) a, RMS.AA2CTIPO c
+             WHERE a.ctr_data_mov = a.ctr_data_mov
+              AND a.ctr_loja = a.ctr_loja
+              AND c.TIP_CODIGO = TRUNC(a.CTR_LOJA / 10)
+              AND c.TIP_DIGITO = RMS.DAC(TRUNC(a.CTR_LOJA / 10))
+              AND a.ctr_data_mov BETWEEN ? AND ?
+              --AND TO_CHAR(a.CTR_NUMSEQ_INI) NOT LIKE '%4391%'
+              AND CTR_DATA = 0
+              AND CTR_FLAG_ATDC <> 'P'
+              AND CTR_FLAG_CRIT = 'F'
+             GROUP BY
+              a.ctr_loja,
+              a.ctr_data_mov,
+              a.CTR_NUMSEQ_INI,
+              a.CTR_AUTONOMIA,
+              c.TIP_CODIGO || '-' || c.TIP_DIGITO,
+              c.tip_estado,
+              c.TIP_NOME_FANTASIA
+             ORDER BY a.CTR_DATA_MOV desc
+                     )
         """;
 
         Map<String, Object> result = jdbcTemplate.queryForMap(sql, dataAnterior, dataHoje);
@@ -133,14 +257,43 @@ public class Teste {
         String dataAnterior = quinzeDiasAtras.format(formatter);
 
         String sql = """
-     SELECT count (distinct ctr_loja) pendentes_Total
-       FROM RMS.AG2VCTRL
-      WHERE CTR_FLAG_ATDC = ' '
-        AND CTR_FLAG_CRIT = ' '
-        AND Ctr_data_mov >= ?
-        AND Ctr_data_mov <= ?
-        AND ((CTR_FLAG_INTG = ' ') OR (CTR_FLAG_INTG = 'I' AND CTR_FLAG_QDOC = 'D'))
-        AND ((CTR_FLAG_QDOC = 'D') OR (CTR_FLAG_QDOC = ' ' AND CTR_FLAG_INTG = 'I'))
+          select count(*) pendentes_Total from (
+          select
+          'PENDENTE' AS STATUS,
+          a.ctr_loja,
+          TO_DATE(a.ctr_data_mov, 'yy/MM/dd') as DATA,
+          a.CTR_NUMSEQ_INI as MAPA,
+          a.CTR_AUTONOMIA as AUTONOMIA,
+          c.TIP_CODIGO || '-' || c.TIP_DIGITO as FILIAL,
+          c.tip_estado as UF,
+          c.TIP_NOME_FANTASIA as NOME
+          from (
+             SELECT * FROM RMS.AG2VCTRL WHERE CTR_DATA =  RMS.DATETO_RMS7(SYSDATE - 1)
+             union
+             SELECT * FROM RMS.AG2VCTRL WHERE CTR_DATA = 0
+          ) a, RMS.AA2CTIPO c
+             WHERE a.ctr_data_mov = a.ctr_data_mov
+              AND a.ctr_loja = a.ctr_loja
+              AND c.TIP_CODIGO = TRUNC(a.CTR_LOJA / 10)
+              AND c.TIP_DIGITO = RMS.DAC(TRUNC(a.CTR_LOJA / 10))
+              AND a.ctr_data_mov BETWEEN ? AND ?
+              --AND TO_CHAR(a.CTR_NUMSEQ_INI) NOT LIKE '%4391%'
+              AND CTR_DATA = 0
+              AND CTR_FLAG_ATDC = ' '
+              AND CTR_FLAG_CRIT = ' '
+              AND ((CTR_FLAG_INTG = ' ' AND CTR_FLAG_QDOC = 'D') OR (CTR_FLAG_INTG = 'I' AND CTR_FLAG_QDOC = 'D'))
+              --AND ((CTR_FLAG_INTG = ' ') OR (CTR_FLAG_INTG = 'I' AND CTR_FLAG_QDOC = 'D'))
+              --AND ((CTR_FLAG_QDOC = 'D') OR (CTR_FLAG_QDOC = ' ' AND CTR_FLAG_INTG = 'I'))
+             GROUP BY
+              a.ctr_loja,
+              a.ctr_data_mov,
+              a.CTR_NUMSEQ_INI,
+              a.CTR_AUTONOMIA,
+              c.TIP_CODIGO || '-' || c.TIP_DIGITO,
+              c.tip_estado,
+              c.TIP_NOME_FANTASIA
+             ORDER BY a.CTR_DATA_MOV desc
+                     )
      """;
 
         Map<String, Object> result = jdbcTemplate.queryForMap(sql, dataAnterior, dataHoje);
@@ -158,50 +311,38 @@ public class Teste {
         String dataHoje = hoje.format(formatter);
 
         String sql = """
-                WITH ultima_data AS (
-                  SELECT
-                    a.CTR_LOJA,
-                    MAX(a.CTR_DATA_MOV) AS max_data
-                  FROM RMS.AG2VCTRL a
-                  WHERE a.CTR_DATA_MOV BETWEEN ? AND ?
-                  GROUP BY a.CTR_LOJA
-                ),
-                base_recente AS (
-                  SELECT
-                    a.*,
-                    t.TIP_CODIGO,
-                    t.TIP_DIGITO,
-                    t.TIP_NOME_FANTASIA,
-                    t.TIP_ESTADO
-                  FROM RMS.AG2VCTRL a
-                  JOIN ultima_data u
-                    ON u.CTR_LOJA = a.CTR_LOJA
-                   AND u.max_data = a.CTR_DATA_MOV
-                  JOIN RMS.AA2CTIPO t
-                    ON t.TIP_CODIGO = TRUNC(a.CTR_LOJA / 10)
-                   AND t.TIP_DIGITO = RMS.DAC(TRUNC(a.CTR_LOJA / 10))
-                LEFT JOIN RMS.AA2CTABE b
-                  ON b.TAB_CODIGO = 45
-                 AND b.TAB_ACESSO = TO_CHAR(TRUNC(a.CTR_LOJA / 10), 'fm0000000') || 'PV2'
-                )
-                SELECT * FROM(
-                SELECT
-                  CASE
-                    WHEN CTR_FLAG_ATDC = 'K' THEN 'COLETA'
-                    WHEN CTR_FLAG_ATDC = 'P' THEN 'ATUALIZADA'
-                    WHEN CTR_FLAG_CRIT = 'F' AND CTR_FLAG_ATDC <> 'P' THEN 'CRITICADA'
-                    WHEN CTR_FLAG_ATDC = ' ' AND CTR_FLAG_CRIT = ' ' THEN 'PENDENTE'
-                  END AS STATUS,
-                  TIP_CODIGO || '-' || TIP_DIGITO AS FILIAL,
-                  TIP_NOME_FANTASIA AS NOME,
-                  TIP_ESTADO AS UF,
-                  TO_DATE(CTR_DATA_MOV, 'yy/MM/dd') AS DATA,
-                  CTR_NUMSEQ_INI AS MAPA,
-                  CTR_AUTONOMIA AS AUTONOMIA
-                FROM base_recente
-                ORDER BY STATUS)
-                WHERE STATUS = 'ATUALIZADA'
-                ORDER BY DATA desc
+                select
+                          'ATUALIZADA' AS STATUS,
+                          b.ctr_loja,
+                          TO_DATE(b.ctr_data_mov, 'yy/MM/dd') as DATA,
+                          a.CTR_NUMSEQ_INI as MAPA,
+                          a.CTR_AUTONOMIA as AUTONOMIA,
+                          c.TIP_CODIGO || '-' || c.TIP_DIGITO as FILIAL,
+                          c.tip_estado as UF,
+                          c.TIP_NOME_FANTASIA as NOME
+                          from (
+                           select
+                            ctr_loja,
+                            max(ctr_data_mov) ctr_data_mov
+                             from RMS.AG2VCTRL
+                            GROUP BY ctr_loja
+                            ) b, RMS.AG2VCTRL a, RMS.AA2CTIPO c--, RMS.AA2CTABE d
+                             WHERE b.ctr_data_mov = a.ctr_data_mov
+                              AND b.ctr_loja = a.ctr_loja
+                              AND c.TIP_CODIGO = TRUNC(a.CTR_LOJA / 10)
+                              AND c.TIP_DIGITO = RMS.DAC(TRUNC(a.CTR_LOJA / 10))
+                              AND a.ctr_data_mov BETWEEN ? AND ?
+                              --AND TO_CHAR(a.CTR_NUMSEQ_INI) NOT LIKE '%4391%'
+                              AND CTR_DATA <> 0
+                             GROUP BY
+                              b.ctr_loja,
+                              b.ctr_data_mov,
+                              a.CTR_NUMSEQ_INI,
+                              a.CTR_AUTONOMIA,
+                              c.TIP_CODIGO || '-' || c.TIP_DIGITO,
+                              c.tip_estado,
+                              c.TIP_NOME_FANTASIA
+                             ORDER BY b.CTR_DATA_MOV desc
         """;
 
         List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql, dataAnterior, dataHoje
@@ -244,51 +385,39 @@ public class Teste {
         String dataAnterior = quinzeDiasAtras.format(formatter);
         String dataHoje = hoje.format(formatter);
 
-    	String sql ="""
-                WITH ultima_data AS (
-                  SELECT
-                    a.CTR_LOJA,
-                    MAX(a.CTR_DATA_MOV) AS max_data
-                  FROM RMS.AG2VCTRL a
-                  WHERE a.CTR_DATA_MOV BETWEEN ? AND ?
-                  GROUP BY a.CTR_LOJA
-                ),
-                base_recente AS (
-                  SELECT
-                    a.*,
-                    t.TIP_CODIGO,
-                    t.TIP_DIGITO,
-                    t.TIP_NOME_FANTASIA,
-                    t.TIP_ESTADO
-                  FROM RMS.AG2VCTRL a
-                  JOIN ultima_data u
-                    ON u.CTR_LOJA = a.CTR_LOJA
-                   AND u.max_data = a.CTR_DATA_MOV
-                  JOIN RMS.AA2CTIPO t
-                    ON t.TIP_CODIGO = TRUNC(a.CTR_LOJA / 10)
-                   AND t.TIP_DIGITO = RMS.DAC(TRUNC(a.CTR_LOJA / 10))
-                LEFT JOIN RMS.AA2CTABE b
-                  ON b.TAB_CODIGO = 45
-                 AND b.TAB_ACESSO = TO_CHAR(TRUNC(a.CTR_LOJA / 10), 'fm0000000') || 'PV2'
-                )
-                SELECT * FROM(
-                SELECT
-                  CASE
-                    WHEN CTR_FLAG_ATDC = 'K' THEN 'COLETA'
-                    WHEN CTR_FLAG_ATDC = 'P' THEN 'ATUALIZADA'
-                    WHEN CTR_FLAG_CRIT = 'F' AND CTR_FLAG_ATDC <> 'P' THEN 'CRITICADA'
-                    WHEN CTR_FLAG_ATDC = ' ' AND CTR_FLAG_CRIT = ' ' THEN 'PENDENTE'
-                  END AS STATUS,
-                  TIP_CODIGO || '-' || TIP_DIGITO AS FILIAL,
-                  TIP_NOME_FANTASIA AS NOME,
-                  TIP_ESTADO AS UF,
-                  TO_DATE(CTR_DATA_MOV, 'yy/MM/dd') AS DATA,
-                  CTR_NUMSEQ_INI AS MAPA,
-                  CTR_AUTONOMIA AS AUTONOMIA
-                FROM base_recente
-                ORDER BY STATUS)
-                WHERE STATUS = 'CRITICADA'
-                ORDER BY DATA desc
+        String sql ="""
+          select
+          'CRITICADA' AS STATUS,
+          a.ctr_loja,
+          TO_DATE(a.ctr_data_mov, 'yy/MM/dd') as DATA,
+          a.CTR_NUMSEQ_INI as MAPA,
+          a.CTR_AUTONOMIA as AUTONOMIA,
+          c.TIP_CODIGO || '-' || c.TIP_DIGITO as FILIAL,
+          c.tip_estado as UF,
+          c.TIP_NOME_FANTASIA as NOME
+          from (
+             SELECT * FROM RMS.AG2VCTRL WHERE CTR_DATA =  RMS.DATETO_RMS7(SYSDATE - 1)
+             union
+             SELECT * FROM RMS.AG2VCTRL WHERE CTR_DATA = 0
+          ) a, RMS.AA2CTIPO c
+             WHERE a.ctr_data_mov = a.ctr_data_mov
+              AND a.ctr_loja = a.ctr_loja
+              AND c.TIP_CODIGO = TRUNC(a.CTR_LOJA / 10)
+              AND c.TIP_DIGITO = RMS.DAC(TRUNC(a.CTR_LOJA / 10))
+              AND a.ctr_data_mov BETWEEN ? AND ?
+              --AND TO_CHAR(a.CTR_NUMSEQ_INI) NOT LIKE '%4391%'
+              AND CTR_DATA = 0
+              AND CTR_FLAG_ATDC <> 'P'
+              AND CTR_FLAG_CRIT = 'F'
+             GROUP BY
+              a.ctr_loja,
+              a.ctr_data_mov,
+              a.CTR_NUMSEQ_INI,
+              a.CTR_AUTONOMIA,
+              c.TIP_CODIGO || '-' || c.TIP_DIGITO,
+              c.tip_estado,
+              c.TIP_NOME_FANTASIA
+             ORDER BY a.CTR_DATA_MOV desc
     	 """;
 
         List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql, dataAnterior, dataHoje
@@ -328,50 +457,42 @@ public class Teste {
         String dataHoje = hoje.format(formatter);
 
         String sql = """
-                WITH ultima_data AS (
-                  SELECT
-                    a.CTR_LOJA,
-                    MAX(a.CTR_DATA_MOV) AS max_data
-                  FROM RMS.AG2VCTRL a
-                  WHERE a.CTR_DATA_MOV BETWEEN ? AND ?
-                  GROUP BY a.CTR_LOJA
-                ),
-                base_recente AS (
-                  SELECT
-                    a.*,
-                    t.TIP_CODIGO,
-                    t.TIP_DIGITO,
-                    t.TIP_NOME_FANTASIA,
-                    t.TIP_ESTADO
-                  FROM RMS.AG2VCTRL a
-                  JOIN ultima_data u
-                    ON u.CTR_LOJA = a.CTR_LOJA
-                   AND u.max_data = a.CTR_DATA_MOV
-                  JOIN RMS.AA2CTIPO t
-                    ON t.TIP_CODIGO = TRUNC(a.CTR_LOJA / 10)
-                   AND t.TIP_DIGITO = RMS.DAC(TRUNC(a.CTR_LOJA / 10))
-                LEFT JOIN RMS.AA2CTABE b
-                  ON b.TAB_CODIGO = 45
-                 AND b.TAB_ACESSO = TO_CHAR(TRUNC(a.CTR_LOJA / 10), 'fm0000000') || 'PV2'
-                )
-                SELECT * FROM(
-                SELECT
-                  CASE
-                    WHEN CTR_FLAG_ATDC = 'K' THEN 'COLETA'
-                    WHEN CTR_FLAG_ATDC = 'P' THEN 'ATUALIZADA'
-                    WHEN CTR_FLAG_CRIT = 'F' AND CTR_FLAG_ATDC <> 'P' THEN 'CRITICADA'
-                    WHEN CTR_FLAG_ATDC = ' ' AND CTR_FLAG_CRIT = ' ' THEN 'PENDENTE'
-                  END AS STATUS,
-                  TIP_CODIGO || '-' || TIP_DIGITO AS FILIAL,
-                  TIP_NOME_FANTASIA AS NOME,
-                  TIP_ESTADO AS UF,
-                  TO_DATE(CTR_DATA_MOV, 'yy/MM/dd') AS DATA,
-                  CTR_NUMSEQ_INI AS MAPA,
-                  CTR_AUTONOMIA AS AUTONOMIA
-                FROM base_recente
-                ORDER BY STATUS)
-                WHERE STATUS = 'COLETA'
-                ORDER BY DATA desc
+                select
+                select
+                  'COLETA' AS STATUS,
+                  b.ctr_loja,
+                  TO_DATE(b.ctr_data_mov, 'yy/MM/dd') as DATA,
+                  a.CTR_NUMSEQ_INI as MAPA,
+                  a.CTR_AUTONOMIA as AUTONOMIA,
+                  c.TIP_CODIGO || '-' || c.TIP_DIGITO as FILIAL,
+                  c.tip_estado as UF,
+                  c.TIP_NOME_FANTASIA as NOME
+                  from (
+                   select
+                    ctr_loja,
+                    max(ctr_data_mov) ctr_data_mov
+                     from RMS.AG2VCTRL
+                    GROUP BY ctr_loja
+                    ) b, RMS.AG2VCTRL a, RMS.AA2CTIPO c--, RMS.AA2CTABE d
+                     WHERE b.ctr_data_mov = a.ctr_data_mov
+                      AND b.ctr_loja = a.ctr_loja
+                      AND c.TIP_CODIGO = TRUNC(a.CTR_LOJA / 10)
+                      AND c.TIP_DIGITO = RMS.DAC(TRUNC(a.CTR_LOJA / 10))
+                      AND a.ctr_data_mov BETWEEN ? AND ?
+                      --AND TO_CHAR(a.CTR_NUMSEQ_INI) NOT LIKE '%4391%'
+                      AND CTR_DATA = 0
+                      AND CTR_FLAG_ATDC in ('K', ' ')
+                      AND CTR_FLAG_CRIT NOT in ('F')
+                      AND CTR_FLAG_QDOC = ' ' AND CTR_FLAG_INTG = ' '
+                     GROUP BY
+                      b.ctr_loja,
+                      b.ctr_data_mov,
+                      a.CTR_NUMSEQ_INI,
+                      a.CTR_AUTONOMIA,
+                      c.TIP_CODIGO || '-' || c.TIP_DIGITO,
+                      c.tip_estado,
+                      c.TIP_NOME_FANTASIA
+                     ORDER BY b.CTR_DATA_MOV desc
         """;
 
         List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql, dataAnterior, dataHoje
@@ -410,50 +531,41 @@ public class Teste {
         String dataHoje = hoje.format(formatter);
 
         String sql ="""
-                WITH ultima_data AS (
-                  SELECT
-                    a.CTR_LOJA,
-                    MAX(a.CTR_DATA_MOV) AS max_data
-                  FROM RMS.AG2VCTRL a
-                  WHERE a.CTR_DATA_MOV BETWEEN ? AND ?
-                  GROUP BY a.CTR_LOJA
-                ),
-                base_recente AS (
-                  SELECT
-                    a.*,
-                    t.TIP_CODIGO,
-                    t.TIP_DIGITO,
-                    t.TIP_NOME_FANTASIA,
-                    t.TIP_ESTADO
-                  FROM RMS.AG2VCTRL a
-                  JOIN ultima_data u
-                    ON u.CTR_LOJA = a.CTR_LOJA
-                   AND u.max_data = a.CTR_DATA_MOV
-                  JOIN RMS.AA2CTIPO t
-                    ON t.TIP_CODIGO = TRUNC(a.CTR_LOJA / 10)
-                   AND t.TIP_DIGITO = RMS.DAC(TRUNC(a.CTR_LOJA / 10))
-                LEFT JOIN RMS.AA2CTABE b
-                  ON b.TAB_CODIGO = 45
-                 AND b.TAB_ACESSO = TO_CHAR(TRUNC(a.CTR_LOJA / 10), 'fm0000000') || 'PV2'
-                )
-                SELECT * FROM(
-                SELECT
-                  CASE
-                    WHEN CTR_FLAG_ATDC = 'K' THEN 'COLETA'
-                    WHEN CTR_FLAG_ATDC = 'P' THEN 'ATUALIZADA'
-                    WHEN CTR_FLAG_CRIT = 'F' AND CTR_FLAG_ATDC <> 'P' THEN 'CRITICADA'
-                    WHEN CTR_FLAG_ATDC = ' ' AND CTR_FLAG_CRIT = ' ' THEN 'PENDENTE'
-                  END AS STATUS,
-                  TIP_CODIGO || '-' || TIP_DIGITO AS FILIAL,
-                  TIP_NOME_FANTASIA AS NOME,
-                  TIP_ESTADO AS UF,
-                  TO_DATE(CTR_DATA_MOV, 'yy/MM/dd') AS DATA,
-                  CTR_NUMSEQ_INI AS MAPA,
-                  CTR_AUTONOMIA AS AUTONOMIA
-                FROM base_recente
-                ORDER BY STATUS)
-                WHERE STATUS = 'PENDENTE'
-                ORDER BY DATA desc
+          select
+          'PENDENTE' AS STATUS,
+          a.ctr_loja,
+          TO_DATE(a.ctr_data_mov, 'yy/MM/dd') as DATA,
+          a.CTR_NUMSEQ_INI as MAPA,
+          a.CTR_AUTONOMIA as AUTONOMIA,
+          c.TIP_CODIGO || '-' || c.TIP_DIGITO as FILIAL,
+          c.tip_estado as UF,
+          c.TIP_NOME_FANTASIA as NOME
+          from (
+             SELECT * FROM RMS.AG2VCTRL WHERE CTR_DATA =  RMS.DATETO_RMS7(SYSDATE - 1)
+             union
+             SELECT * FROM RMS.AG2VCTRL WHERE CTR_DATA = 0
+          ) a, RMS.AA2CTIPO c
+             WHERE a.ctr_data_mov = a.ctr_data_mov
+              AND a.ctr_loja = a.ctr_loja
+              AND c.TIP_CODIGO = TRUNC(a.CTR_LOJA / 10)
+              AND c.TIP_DIGITO = RMS.DAC(TRUNC(a.CTR_LOJA / 10))
+              AND a.ctr_data_mov BETWEEN ? AND ?
+              --AND TO_CHAR(a.CTR_NUMSEQ_INI) NOT LIKE '%4391%'
+              AND CTR_DATA = 0
+              AND CTR_FLAG_ATDC = ' '
+              AND CTR_FLAG_CRIT = ' '
+              AND ((CTR_FLAG_INTG = ' ' AND CTR_FLAG_QDOC = 'D') OR (CTR_FLAG_INTG = 'I' AND CTR_FLAG_QDOC = 'D'))
+              --AND ((CTR_FLAG_INTG = ' ') OR (CTR_FLAG_INTG = 'I' AND CTR_FLAG_QDOC = 'D'))
+              --AND ((CTR_FLAG_QDOC = 'D') OR (CTR_FLAG_QDOC = ' ' AND CTR_FLAG_INTG = 'I'))
+             GROUP BY
+              a.ctr_loja,
+              a.ctr_data_mov,
+              a.CTR_NUMSEQ_INI,
+              a.CTR_AUTONOMIA,
+              c.TIP_CODIGO || '-' || c.TIP_DIGITO,
+              c.tip_estado,
+              c.TIP_NOME_FANTASIA
+             ORDER BY a.CTR_DATA_MOV desc
         """;
 
         List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql, dataAnterior, dataHoje
@@ -482,6 +594,112 @@ public class Teste {
         return ResponseEntity.ok(formattedList);
     }
 
+    @GetMapping("/tabelas_adjuste")
+    public ResponseEntity<?> tabela_Adjuste() {
+
+        LocalDate hoje = LocalDate.now();
+        LocalDate quinzeDiasAtras = hoje.minusDays(15);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyMMdd");
+        String dataAnterior = quinzeDiasAtras.format(formatter);
+        String dataHoje = hoje.format(formatter);
+
+        String sql ="""
+                select
+                          case
+                              WHEN
+                                  CTR_DATA = 0
+                                  AND CTR_FLAG_CRIT = ' '
+                                  AND ((CTR_FLAG_INTG = ' ' AND CTR_FLAG_QDOC = 'D') OR (CTR_FLAG_INTG = 'I' AND CTR_FLAG_QDOC = 'D'))
+                              THEN 'PENDENTE'
+                              WHEN
+                                  CTR_DATA = 0
+                                  AND CTR_FLAG_ATDC in ('K', ' ')
+                                  AND CTR_FLAG_CRIT NOT in ('F')
+                                  AND CTR_FLAG_QDOC = ' ' AND CTR_FLAG_INTG = ' '
+                                  THEN 'COLETA'
+                              WHEN
+                                  CTR_DATA = 0
+                                  AND CTR_FLAG_ATDC <> 'P'
+                                  AND CTR_FLAG_CRIT = 'F'
+                                  THEN 'CRITICADA'
+                              ELSE 'NADA'
+                              END AS STATUS,
+                          a.ctr_loja,
+                          TO_DATE(a.ctr_data_mov, 'yy/MM/dd') as DATA,
+                          a.CTR_NUMSEQ_INI as MAPA,
+                          a.CTR_AUTONOMIA as AUTONOMIA,
+                          c.TIP_CODIGO || '-' || c.TIP_DIGITO as FILIAL,
+                          c.tip_estado as UF,
+                          c.TIP_NOME_FANTASIA as NOME
+                          from (
+                             SELECT * FROM RMS.AG2VCTRL WHERE CTR_DATA =  RMS.DATETO_RMS7(SYSDATE - 1)
+                             union
+                             SELECT * FROM RMS.AG2VCTRL WHERE CTR_DATA = 0
+                          ) a, RMS.AA2CTIPO c
+                             WHERE a.ctr_data_mov = a.ctr_data_mov
+                              AND a.ctr_loja = a.ctr_loja
+                              AND c.TIP_CODIGO = TRUNC(a.CTR_LOJA / 10)
+                              AND c.TIP_DIGITO = RMS.DAC(TRUNC(a.CTR_LOJA / 10))
+                              AND a.ctr_data_mov BETWEEN ? AND ?
+                              --AND TO_CHAR(a.CTR_NUMSEQ_INI) NOT LIKE '%4391%'
+                              AND CTR_DATA = 0
+                             GROUP BY
+                             case
+                              WHEN
+                                  a.CTR_DATA = 0
+                                  AND CTR_FLAG_CRIT = ' '
+                                  AND ((CTR_FLAG_INTG = ' ' AND CTR_FLAG_QDOC = 'D') OR (CTR_FLAG_INTG = 'I' AND CTR_FLAG_QDOC = 'D'))
+                              THEN 'PENDENTE'
+                              WHEN
+                                  a.CTR_DATA = 0
+                                  AND CTR_FLAG_ATDC in ('K', ' ')
+                                  AND CTR_FLAG_CRIT NOT in ('F')
+                                  AND CTR_FLAG_QDOC = ' ' AND CTR_FLAG_INTG = ' '
+                                  THEN 'COLETA'
+                              WHEN
+                                  a.CTR_DATA = 0
+                                  AND CTR_FLAG_ATDC <> 'P'
+                                  AND CTR_FLAG_CRIT = 'F'
+                                  THEN 'CRITICADA'
+                              ELSE 'NADA'
+                              END,
+                              a.ctr_loja,
+                              a.ctr_data_mov,
+                              a.CTR_NUMSEQ_INI,
+                              a.CTR_AUTONOMIA,
+                              c.TIP_CODIGO || '-' || c.TIP_DIGITO,
+                              c.tip_estado,
+                              c.TIP_NOME_FANTASIA
+                              order by ctr_data_mov desc
+        """;
+
+        List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql, dataAnterior, dataHoje
+        );
+
+        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        List<Map<String, Object>> formattedList = resultList.stream().map(row -> {
+            Map<String, Object> newRow = new HashMap<>(row);
+            Object dataObj = row.get("DATA");
+            if (dataObj != null) {
+                LocalDate date = null;
+                if (dataObj instanceof java.sql.Date) {
+                    date = ((java.sql.Date) dataObj).toLocalDate();
+                } else if (dataObj instanceof java.sql.Timestamp) {
+                    date = ((java.sql.Timestamp) dataObj).toLocalDateTime().toLocalDate();
+                } else if (dataObj instanceof java.util.Date) {
+                    date = ((java.util.Date) dataObj).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                }
+                newRow.put("DATA", date != null ? date.format(outputFormatter) : null);
+            } else {
+                newRow.put("DATA", null);
+            }
+            return newRow;
+        }).toList();
+
+        return ResponseEntity.ok(formattedList);
+    }
+    
     /* Total Ajuste */
     @GetMapping("/totalAjuste")
     public ResponseEntity<?> totalAjuste() {
@@ -494,54 +712,77 @@ public class Teste {
         String dataAnterior = quinzeDiasAtras.format(formatter);
 
         String sql = """
-                WITH ultima_data AS (
-                                                 SELECT
-                                                   a.CTR_LOJA,
-                                                   MAX(a.CTR_DATA_MOV) AS max_data
-                                                 FROM RMS.AG2VCTRL a
-                                                 WHERE a.CTR_DATA_MOV BETWEEN ? AND ?
-                                                 GROUP BY a.CTR_LOJA
-                                               ),
-                
-                                               base_recente AS (
-                                                 SELECT
-                                                   a.*,
-                                                   t.TIP_CODIGO,
-                                                   t.TIP_DIGITO,
-                                                   t.TIP_NOME_FANTASIA,
-                                                   t.TIP_ESTADO
-                                                 FROM RMS.AG2VCTRL a
-                
-                                                 JOIN ultima_data u
-                                                   ON u.CTR_LOJA = a.CTR_LOJA
-                                                  AND u.max_data = a.CTR_DATA_MOV
-                
-                                                 JOIN RMS.AA2CTIPO t
-                                                   ON t.TIP_CODIGO = TRUNC(a.CTR_LOJA / 10)
-                                                  AND t.TIP_DIGITO = RMS.DAC(TRUNC(a.CTR_LOJA / 10))
-                
-                                               LEFT JOIN RMS.AA2CTABE b
-                                                 ON b.TAB_CODIGO = 45
-                                                AND b.TAB_ACESSO = TO_CHAR(TRUNC(a.CTR_LOJA / 10), 'fm0000000') || 'PV2'
-                                               )
-                
-                                               SELECT
-                                                 STATUS,
-                                                 COUNT(*) AS TOTAL
-                                               FROM (
-                                                 SELECT
-                                                   CASE
-                                                     WHEN CTR_FLAG_ATDC = 'K' THEN 'COLETA'
-                                                     WHEN CTR_FLAG_ATDC = 'P' THEN 'ATUALIZADA'
-                                                     WHEN CTR_FLAG_CRIT = 'F' AND CTR_FLAG_ATDC <> 'P' THEN 'CRITICADA'
-                                                     WHEN CTR_FLAG_ATDC = ' ' AND CTR_FLAG_CRIT = ' ' THEN 'PENDENTE'
-                                                   END AS STATUS
-                                                 FROM base_recente
-                                               )
-                                               WHERE STATUS IS NOT NULL
-                                               GROUP BY STATUS
-                                               ORDER BY STATUS
-""";
+                select
+                                 STATUS,
+                                 count (*) TOTAL from (
+                          select
+                          case
+                              WHEN
+                                  CTR_DATA = 0
+                                  AND CTR_FLAG_CRIT = ' '
+                                  AND ((CTR_FLAG_INTG = ' ' AND CTR_FLAG_QDOC = 'D') OR (CTR_FLAG_INTG = 'I' AND CTR_FLAG_QDOC = 'D'))
+                              THEN 'PENDENTE'
+                              WHEN
+                                  CTR_DATA = 0
+                                  AND CTR_FLAG_ATDC in ('K', ' ')
+                                  AND CTR_FLAG_CRIT NOT in ('F')
+                                  AND CTR_FLAG_QDOC = ' ' AND CTR_FLAG_INTG = ' '
+                                  THEN 'COLETA'
+                              WHEN
+                                  CTR_DATA = 0
+                                  AND CTR_FLAG_ATDC <> 'P'
+                                  AND CTR_FLAG_CRIT = 'F'
+                                  THEN 'CRITICADA'
+                              ELSE 'NADA'
+                              END AS STATUS,
+                          a.ctr_loja,
+                          TO_DATE(a.ctr_data_mov, 'yy/MM/dd') as DATA,
+                          a.CTR_NUMSEQ_INI as MAPA,
+                          a.CTR_AUTONOMIA as AUTONOMIA,
+                          c.TIP_CODIGO || '-' || c.TIP_DIGITO as FILIAL,
+                          c.tip_estado as UF,
+                          c.TIP_NOME_FANTASIA as NOME
+                          from (
+                             SELECT * FROM RMS.AG2VCTRL WHERE CTR_DATA =  RMS.DATETO_RMS7(SYSDATE - 1)
+                             union
+                             SELECT * FROM RMS.AG2VCTRL WHERE CTR_DATA = 0
+                          ) a, RMS.AA2CTIPO c
+                             WHERE a.ctr_data_mov = a.ctr_data_mov
+                              AND a.ctr_loja = a.ctr_loja
+                              AND c.TIP_CODIGO = TRUNC(a.CTR_LOJA / 10)
+                              AND c.TIP_DIGITO = RMS.DAC(TRUNC(a.CTR_LOJA / 10))
+                              AND a.ctr_data_mov BETWEEN ? AND ?
+                              --AND TO_CHAR(a.CTR_NUMSEQ_INI) NOT LIKE '%4391%'
+                              AND CTR_DATA = 0
+                             GROUP BY
+                             case
+                              WHEN
+                                  a.CTR_DATA = 0
+                                  AND CTR_FLAG_CRIT = ' '
+                                  AND ((CTR_FLAG_INTG = ' ' AND CTR_FLAG_QDOC = 'D') OR (CTR_FLAG_INTG = 'I' AND CTR_FLAG_QDOC = 'D'))
+                              THEN 'PENDENTE'
+                              WHEN
+                                  a.CTR_DATA = 0
+                                  AND CTR_FLAG_ATDC in ('K', ' ')
+                                  AND CTR_FLAG_CRIT NOT in ('F')
+                                  AND CTR_FLAG_QDOC = ' ' AND CTR_FLAG_INTG = ' '
+                                  THEN 'COLETA'
+                              WHEN
+                                  a.CTR_DATA = 0
+                                  AND CTR_FLAG_ATDC <> 'P'
+                                  AND CTR_FLAG_CRIT = 'F'
+                                  THEN 'CRITICADA'
+                              ELSE 'NADA'
+                              END,
+                              a.ctr_loja,
+                              a.ctr_data_mov,
+                              a.CTR_NUMSEQ_INI,
+                              a.CTR_AUTONOMIA,
+                              c.TIP_CODIGO || '-' || c.TIP_DIGITO,
+                              c.tip_estado,
+                              c.TIP_NOME_FANTASIA)
+                              GROUP BY STATUS
+    """;
 
 
         List<Map<String, Object>> result = jdbcTemplate.queryForList(sql, dataAnterior, dataHoje);

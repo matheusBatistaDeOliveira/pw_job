@@ -24,7 +24,7 @@ const ALTURA_LINHA = 20;
 
 async function totaisAdjust(NAFILA, EMFATURAMENTO, AGUARDANDOAUTORIZACAO
     , AUTORIZADA, Enviado, Erro) {
-    let data = await fetch(`http://172.16.0.190:6842/totaisAdjust`);
+    let data = await fetch(`http://172.16.0.186:6842/totaisAdjust`);
     data = await data.json();
 
     const objNAFILA = data.find(coluna => coluna.STATUS === "FILA");
@@ -246,11 +246,11 @@ async function getTotais() {
         totalErro
     );
 
-    await tables(`http://172.16.0.190:6842/tableNAFILA`, tableSelectorNAFILA);
-    await tables(`http://172.16.0.190:6842/tableEMFATURAMENTO`, tableSelectorEMFATURAMENTO);
-    await tables(`http://172.16.0.190:6842/tableAGUARDANDOAUTORIZACAO`, tableSelectorAGUARDANDOAUTORIZACAO);
-    await tables(`http://172.16.0.190:6842/tableAUTORIZADA`, tableSelectorAUTORIZADA);
-    await tables(`http://172.16.0.190:6842/tableErro`, tableSelectorErro);
+    await tables(`http://172.16.0.186:6842/tableNAFILA`, tableSelectorNAFILA);
+    await tables(`http://172.16.0.186:6842/tableEMFATURAMENTO`, tableSelectorEMFATURAMENTO);
+    await tables(`http://172.16.0.186:6842/tableAGUARDANDOAUTORIZACAO`, tableSelectorAGUARDANDOAUTORIZACAO);
+    await tables(`http://172.16.0.186:6842/tableAUTORIZADA`, tableSelectorAUTORIZADA);
+    await tables(`http://172.16.0.186:6842/tableErro`, tableSelectorErro);
 }
 
 async function atualizarDadosIntroducao() {
@@ -282,7 +282,7 @@ window.reload = atualizarDadosIntroducao();
         const targetId = this.dataset.target;
         const tabelaAlvo = document.getElementById(targetId);
         if(targetId === "table-ENVIADO") {
-            tables(`http://172.16.0.190:6842/tableEnviado`, tableSelectorEnviado);
+            tables(`http://172.16.0.186:6842/tableEnviado`, tableSelectorEnviado);
             atualizarDados();
         }else{
             atualizarDados();

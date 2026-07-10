@@ -58,11 +58,10 @@
     display:       none;
 }
 
-
 input{
     position:      absolute;
     margin:        10px;
-    font-size:     10px;
+    font-size:     1dvw;
     border:        #ffff;
     border-radius: 3px;
 }
@@ -73,54 +72,38 @@ input:hover{
 }
 
 img{
-    margin-top: 39px;
-    height:     111px;
-    width:      465px;
+    margin-top: 6dvw;
+    height:     auto;
+    width:      35dvw;
 }
 
 .totalH1{
     color:         #0199a7;
     font-weight:   900;
-    margin-bottom: 28px;
+    margin-bottom: 1.5dvw;
+    font-size: 2dvw;
 }
 
 main{
-    margin-top:         50px;
-    width:              1388px;
-    height:             545px;
-    border-radius:      24px;
+    padding-top: 0.5dvw;
+    margin-top:         1dvw;
+    width:               99%;
+    height:             auto;
+    border-radius:      1dvw;
     background-color:   rgba(1,153,167, 0.62);
-    margin-bottom:      39px;
+    margin-bottom:      1dvw;
     box-shadow:         0px 3px 4px 0.8px rgba(0, 0, 0, 0.2);
-}
-
-#gs_status_boxSrc{
-    padding-top: 30px;
-    font-size: 30px;
-    display: flex;
-    justify-content: space-between;
-}
-
-#gs_status_boxSrc > h2{
-    letter-spacing: 1px;
-    color:          #ffff;
-    opacity:        100%;
-    font-size: 30px;
-    text-transform: uppercase;
-    border-radius: 25px;
-    background-color: #EE7E00;
-    width: 48px;
-    height: 35px;
-    margin-bottom: 10px;
+    padding-bottom: 0.5dvw;
 }
 
 .box_src{
+    padding-top: 0.7dvw;
     display:          block;
     justify-items:    center;
-    width:            220px;
-    height:           140px;
+    width:            15%;
+    height:           10dvw;
     background-color: rgba(1,153,167, 0.62);
-    border-radius:    24px; ;
+    border-radius:    1.2dvw;
     transition:       0.3s;
     box-shadow:       0px 3px 0px 0.1px rgba(0, 0, 0, 0.2);
     padding-bottom: 30px;
@@ -141,7 +124,7 @@ main{
     letter-spacing:       1px;
     color:            #ffff;
     opacity:             100%;
-    font-size:           17px;
+    font-size:           1.2dvw;
     text-transform: uppercase;
 }
 
@@ -150,7 +133,7 @@ main{
 }
 
 .adjuste{
-margin-top: 25px;
+margin-top: 1.7dvw;
 }
 
 .adjuste2{
@@ -161,26 +144,27 @@ body{
     display:            block;
     justify-items:     center;
     text-align:        center;
-    height:             645px;
-    transform:     scale(1.35);
-    padding-top:        190px;
     overflow-x:        hidden;
 }
 
 .numberShopsBox{
     display:             flex;
-    width:              148px;
-    height:              33px;
+    width:                70%;
+    height:              auto;
     background-color: #d9d9d9;
-    border-radius:       24px;
+    border-radius:       1.2dvw;
     color:              #3d3d3d;
-    font-size:           21px;
-    font-weight:          700;
+    font-size:           3dvw;
+    font-weight:          900;
     letter-spacing:       1px;
 }
 
 .numberShops {
     padding-top:   4px;
+}
+
+.legenda{
+    font-size: 1dvw;
 }
 
 td{
@@ -226,11 +210,6 @@ tr:nth-child(even){
 th{
     background-color: #d9d9d9;
     height:           40px;
-}
-
-main{
-    height:         auto;
-    padding-bottom: 20px;
 }
 
 .tableSection {

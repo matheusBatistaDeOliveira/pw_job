@@ -34,10 +34,10 @@ public class backEnd {
                transactioncode,
                nfnumber_out NOTA,
                gs_data_retorno_wms,
-               substr(ordernumber,10,8) MAPA,\s
+               substr(ordernumber,10,8) MAPA,
                (
                 select max(pale_destino)
-                from gsretail.GS_INTEGRA_TMS_CAPA_WA\s
+                from gsretail.GS_INTEGRA_TMS_CAPA_WA
                 where to_number(pale_carga) = to_number(substr(ordernumber,10,8))
                ) destino
                  from gsretail.GS_INTEGRA_WMS_MST_NODE_IN

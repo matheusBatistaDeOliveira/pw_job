@@ -26,7 +26,7 @@ const ALTURA_LINHA = 20;
 
 
 async function totaisAdjust(t852, t711, t851,t701, t853, t700, bloqueio, desbloqueio) {
-    let data = await fetch(`http://172.16.0.213:6842/totaisAdjust`);
+    let data = await fetch(`http://172.16.0.186:6842/totaisAdjust`);
     data = await data.json();
 
     const objt852 = data.find(coluna => coluna.CODIGO_TRANSACAO === "852");
@@ -36,7 +36,7 @@ async function totaisAdjust(t852, t711, t851,t701, t853, t700, bloqueio, desbloq
     const objt853 = data.find(coluna => coluna.CODIGO_TRANSACAO === "853");
     const objT700 = data.find(coluna => coluna.CODIGO_TRANSACAO === "700");
 
-
+ 
     const valort852 = Number(objt852?.TOTAL || 0);
     const valort711 = Number(objt711?.TOTAL || 0);
     const valort851 = Number(objt851?.TOTAL || 0);
@@ -238,14 +238,14 @@ async function getTotais() {
         totalBloqueio
     );
 
-    await totais(`http://172.16.0.213:6842/totalSKU`, totalSKUs)
-    await tables(`http://172.16.0.213:6842/t852`, tableSelectorT852);
-    await tables(`http://172.16.0.213:6842/t711`, tableSelectorT711);
-    await tables(`http://172.16.0.213:6842/t851`, tableSelectorT851);
-    await tables(`http://172.16.0.213:6842/t701`, tableSelectorT701);
-    await tables(`http://172.16.0.213:6842/t853`, tableSelectorT853)
-    await tables(`http://172.16.0.213:6842/t700`, tableSelectorT700);
-    await tables(`http://172.16.0.213:6842/tableSKU`, tableSKUsEXP);
+    await totais(`http://172.16.0.186:6842/totalSKU`, totalSKUs)
+    await tables(`http://172.16.0.186:6842/t852`, tableSelectorT852);
+    await tables(`http://172.16.0.186:6842/t711`, tableSelectorT711);
+    await tables(`http://172.16.0.186:6842/t851`, tableSelectorT851);
+    await tables(`http://172.16.0.186:6842/t701`, tableSelectorT701);
+    await tables(`http://172.16.0.186:6842/t853`, tableSelectorT853)
+    await tables(`http://172.16.0.186:6842/t700`, tableSelectorT700);
+    await tables(`http://172.16.0.186:6842/tableSKU`, tableSKUsEXP);
 }
 
 async function atualizarDadosIntroducao() {

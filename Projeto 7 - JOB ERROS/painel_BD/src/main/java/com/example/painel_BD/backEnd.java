@@ -29,6 +29,7 @@ public class backEnd {
                   FROM dba_scheduler_job_run_details
                 WHERE RMS.dateto_rms7(LOG_DATE) >= RMS.dateto_rms7(sysdate-10)
                    AND STATUS = 'STOPPED'
+                   AND JOB_NAME = 'JOB_PROC_IMPORTA_CAPTURA_SAIDA'
                 """;
         return gettingTables(sql);
     }
@@ -44,6 +45,7 @@ public class backEnd {
                   FROM dba_scheduler_job_run_details
                 WHERE RMS.dateto_rms7(LOG_DATE) >= RMS.dateto_rms7(sysdate-10)
                    AND STATUS = 'FAILED'
+                   AND JOB_NAME = 'JOB_PROC_IMPORTA_CAPTURA_SAIDA'
                 """;
         return gettingTables(sql);
     }
@@ -59,6 +61,7 @@ public class backEnd {
                   FROM dba_scheduler_job_run_details
                 WHERE RMS.dateto_rms7(LOG_DATE) >= RMS.dateto_rms7(sysdate)
                    AND STATUS = 'SUCCEEDED'
+                   AND JOB_NAME = 'JOB_PROC_IMPORTA_CAPTURA_SAIDA'
                    order by data desc
                    FETCH FIRST 500 ROWS ONLY
                 """;
@@ -76,7 +79,9 @@ public class backEnd {
                         additional_info
                   FROM dba_scheduler_job_run_details
                 WHERE RMS.dateto_rms7(LOG_DATE) >= RMS.dateto_rms7(sysdate-10)
-                   AND STATUS != 'SUCCEEDED')
+                   AND STATUS != 'SUCCEEDED'
+                   AND JOB_NAME = 'JOB_PROC_IMPORTA_CAPTURA_SAIDA'
+                   )
                    GROUP BY STATUS
                 """;
         return gettingTables(sql);
@@ -93,7 +98,9 @@ public class backEnd {
                         additional_info
                   FROM dba_scheduler_job_run_details
                 WHERE RMS.dateto_rms7(LOG_DATE) >= RMS.dateto_rms7(sysdate-10)
-                AND STATUS != 'SUCCEEDED')
+                AND STATUS != 'SUCCEEDED'
+                AND JOB_NAME = 'JOB_PROC_IMPORTA_CAPTURA_SAIDA'
+                )
                 """;
         return gettingTables(sql);
     }
@@ -110,6 +117,7 @@ public class backEnd {
                   FROM dba_scheduler_job_run_details
                 WHERE RMS.dateto_rms7(LOG_DATE) >= RMS.dateto_rms7(sysdate)
                    AND STATUS = 'SUCCEEDED'
+                   AND JOB_NAME = 'JOB_PROC_IMPORTA_CAPTURA_SAIDA'
                    order by data desc)
                 """;
         return gettingTables(sql);

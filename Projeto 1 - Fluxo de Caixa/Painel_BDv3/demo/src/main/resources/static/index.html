@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./style.css">
-    <link rel="icon" href="https://play-lh.googleusercontent.com/-BnkaUGEENV4Es-ODp3fxpogBD0TRXCe7_swJBdgKBKH3gx0y2vcdZHVI_ETbx6XD9c">
+    <link rel="icon"
+          href="https://play-lh.googleusercontent.com/-BnkaUGEENV4Es-ODp3fxpogBD0TRXCe7_swJBdgKBKH3gx0y2vcdZHVI_ETbx6XD9c">
     <title>Status de Lojas</title>
 </head>
 
@@ -28,7 +29,9 @@
 
 <header>
     <a href="#"><img src="./cobasi-logo.png" alt=""></a>
-    <div class="numberShopsBox" id="numberShopsBoxTotal"><p class="numberShops numberShopsTotal">000</p></div>
+    <div class="numberShopsBox" id="numberShopsBoxTotal">
+        <p class="numberShops numberShopsTotal" id="numberShopsTotalLojas">000</p>
+    </div>
     <h1 class="totalH1">TOTAL DE LOJAS</h1>
 </header>
 
@@ -39,8 +42,10 @@
                 <input type="button" id="numberColeta" class="input1" value="🔻" data-target="table-coleta">
             </div>
             <h2 class="botoesH2">coleta</h2>
-            <div class="numberShopsBox" id="numberBD-Coleta"><p class="numberShops numberShopsColeta">Loading</p></div>
-            <p class="pCima pDate" >data mais antiga</p>
+            <div class="numberShopsBox" id="numberBD-Coleta">
+                <p class="numberShops numberShopsColeta">0000</p>
+            </div>
+            <p class="pCima pDate">data mais antiga</p>
             <p id="dateColeta" class="pDate">Loading...</p>
         </div>
         <div class="box_src">
@@ -48,8 +53,10 @@
                 <input type="button" id="numberPendentes" class="input3" value="🔻" data-target="table-pendente">
             </div>
             <h2 class="botoesH2">pendentes</h2>
-            <div class="numberShopsBox" id="numberBD-Pendentes"><p class="numberShops numberShopsPendente">Loading</p></div>
-            <p class="pCima pDate" >data mais antiga</p>
+            <div class="numberShopsBox" id="numberBD-Pendentes">
+                <p class="numberShops numberShopsPendente">0000</p>
+            </div>
+            <p class="pCima pDate">data mais antiga</p>
             <p id="datePendente" class="pDate">Loading...</p>
         </div>
         <div class="box_src">
@@ -57,16 +64,21 @@
                 <input type="button" id="numberCriticadas" class="input2" value="🔻" data-target="table-criticada">
             </div>
             <h2 class="botoesH2">criticadas</h2>
-            <div class="numberShopsBox" id="numberBD-Criticadas"><p class="numberShops numberShopsCriticada">Loading</p></div>
-            <p class="pCima pDate" >data mais antiga</p>
+            <div class="numberShopsBox" id="numberBD-Criticadas">
+                <p class="numberShops numberShopsCriticada">0000</p>
+            </div>
+            <p class="pCima pDate">data mais antiga</p>
             <p id="dateCriticada" class="pDate">Loading...</p>
         </div>
         <div class="box_src atu">
             <div class="boxBtn button4">
-                <input type="button" id="numberAtualizadas" class="input4" data-target="table-atualizada" value="🔻">
+                <input type="button" id="numberAtualizadas" class="input4" data-target="table-atualizada"
+                       value="🔻">
             </div>
             <h2 class="botoesH2">atualizadas</h2>
-            <div class="numberShopsBox" id="numberBD-Atualizadas"><p class="numberShops numberShopsAtualizada">Loading</p></div>
+            <div class="numberShopsBox" id="numberBD-Atualizadas">
+                <p class="numberShops numberShopsAtualizada">0000</p>
+            </div>
         </div>
     </section>
 
@@ -87,11 +99,12 @@
     </section>
 </main>
 
-<p>Os dados são atualizados automaticamente a cada <strong>10</strong> minutos</p>
-<p>O período de análise contempla os últimos <strong>15</strong> dias</p>
+<p class="legenda">Os dados são atualizados automaticamente a cada <strong>10</strong> minutos</p>
+<p class="legenda">O período de análise contempla os últimos <strong>15</strong> dias</p>
 
-<input type="button" id="exp" value ="exp CSV">
+<input type="button" id="exp" value="exp CSV">
 
 <script src="javaScript.js"></script>
 </body>
+
 </html>

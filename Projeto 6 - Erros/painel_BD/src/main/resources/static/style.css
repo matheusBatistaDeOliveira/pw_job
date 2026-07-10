@@ -12,28 +12,33 @@
 }
 
 .button1 {
-    margin-left: 753px;
+    margin-left: -14dvw;
     z-index:     -1;
 }
 
 .button2{
-    margin-left: 242px;
+    margin-left: -14dvw;
     z-index:     -1;
 
 }
 
 .button3{
-    margin-left: -350px;
+    margin-left: -14dvw;
+    z-index:     -1;
+}
+
+.button6{
+    margin-left: -14dvw;
     z-index:     -1;
 }
 
 .button4{
-    margin-left: -800px;
+    margin-left: -14dvw;
     z-index:     -1;
 }
 
 .button5{
-    margin-right: 200px;
+    margin-right: 14dvw;
     z-index:     -1;
 }
 
@@ -69,12 +74,12 @@
 }
 
 
-input{
+input[value="🔻"]{
     position:      absolute;
-    margin:        10px;
-    font-size:     10px;
+    margin:        1dvw;
+    font-size:     1dvw;
     border:        #ffff;
-    border-radius: 3px;
+    border-radius: 0.2dvw;
 }
 
 input:hover{
@@ -84,28 +89,24 @@ input:hover{
 
 img{
     margin-top: 39px;
-    height:     111px;
-    width:      465px;
+    height:     8.3dvw;
+    width:      33dvw;
 }
 
 main{
-    display: flex;
-    flex-wrap:  wrap;
-    justify-content:  center;
-    margin-top:         50px;
-    width:              1388px;
-    height:             545px;
-    border-radius:      24px;
+    width:                 95%;
+    border-radius:        24px;
     background-color:   rgba(1,153,167, 0.62);
-    margin-bottom:      39px;
+    margin-bottom:         8px;
     box-shadow:         0px 3px 4px 0.8px rgba(0, 0, 0, 0.2);
+    height:               auto;
+    padding-bottom:       1.5dvw;
+    padding-inline:       1dvw;
 }
 
 #gs_status_boxSrc{
     padding-top: 30px;
-    font-size: 30px;
     display: flex;
-    justify-content: space-between;
 }
 
 #gs_status_boxSrc > h2{
@@ -121,17 +122,17 @@ main{
 }
 
 .box_src{
-    display:          block;
+    display:           block;
     justify-items:    center;
-    width:            220px;
-    height:           160px;
+    width:              20%;
+    height:             auto;
+    border-radius:    2.5dvw;
     background-color: rgba(1,153,167, 0.62);
-    border-radius:    24px; ;
-    transition:       0.3s;
     box-shadow:       0px 3px 0px 0.1px rgba(0, 0, 0, 0.2);
-    padding-bottom: 30px;
-    margin-top: 40px;
-    margin-bottom: 35px;
+    margin-top:       3dvw;
+    margin-bottom:    3dvw;
+    transition:       0.2s;
+    margin-inline: 0.3rem;
 }
 
 .box_src:hover{
@@ -140,21 +141,19 @@ main{
 
 #botoes_de_src{
     display:             flex;
-    gap:10px;
 }
 
 .botoesH2{
-    margin-top: 10px;
-    letter-spacing: 1px;
-    color: #ffff;
-    opacity: 100%;
-    font-size: 17px;
+    letter-spacing:       0.05dvw;
+    color:              #ffff;
+    opacity:             100%;
+    font-size:           1dvw;/**/
     text-transform: uppercase;
 }
 
 .cimah2{
     margin-top: 30px;
-    font-size: 27px;
+    font-size: 3dvw;
 }
 
 body{
@@ -162,27 +161,31 @@ body{
     justify-items:     center;
     text-align:        center;
     height:             645px;
-    transform:        scale(0.8);
     overflow-x:        hidden;
-    margin: 0;
 }
 
 .numberShopsBox{
-    display:             flex;
-    justify-content: center;
-    width:              148px;
-    height:              33px;
-    background-color: #d9d9d9;
-    border-radius:       24px;
-    color:              #3d3d3d;
-    font-size:           21px;
-    font-weight:          700;
-    letter-spacing:       1px;
-    margin-top: 0.6rem;
+    display:               flex;
+    align-items:         center;
+    justify-content:     center;
+    width:                  80%;
+    height:                 30%;
+    border-radius:         1.5dvw;
+    background-color:   #d9d9d9;
+    color:                #ffff;
+    font-size:             3.5dvw;
+    color: rgba(0, 0, 0, 0.726);
+    font-weight:            900;
+    letter-spacing:       0.05dvw;
+    margin-top:            1dvw;
 }
 
 .numberShops {
-    padding-top:   4px;
+    padding-bottom: 0.1dvw;
+}
+
+#numberShopsTotalLojas{
+    margin-bottom: -0.5rem;
 }
 
 td{
@@ -198,12 +201,16 @@ td{
 }
 
 .totaisCima{
+    display: flex;
+    align-items: center;
+    justify-content: center;
     margin-top: 20px;
-    width: 350px;
-    background-color: #d9d9d9;
-    font-size: 66px;
-    padding-bottom: 48px;
     font-weight: 900;
+    width:       25dvw;
+    height: 7dvw;
+    background-color: #d9d9d9;
+    font-size:        6dvw;
+    border-radius: 2dvw;
 }
 
 .ajusteEsquerdo{
@@ -214,6 +221,7 @@ td{
     color:         #0199a7;
     font-weight:   900;
     margin-bottom: 28px;
+    font-size: 2dvw;
 }
 
 .loading{
@@ -263,11 +271,13 @@ main{
 .tableSection {
     align-self: center;
     max-height: 300px;
-    width:      1388px;
+    width:      100%;
     overflow-y: scroll;
     overflow-x: scroll;
     background-clip: content-box;
     border-radius: 2px;
+    padding-bottom: 5px;
+    margin-left: 5px;
 }
 
 .tableSection::-webkit-scrollbar{
@@ -292,8 +302,15 @@ main{
 }
 
 .expButtom{
-    padding: 12px;
-    position: relative;
+    padding: 0.8dvw;
+    margin: 10px;
+    font-size:  0.5dvw;
+    border: #ffff;
+    border-radius: 0.19dvw;
+}
+
+.legenda{
+    font-size: 1dvw;
 }
 
 #CirculosSection {
@@ -390,18 +407,6 @@ moveLoadingWidth {
 
 .loading { animation-duration: 50s;  }
 
-.tableSection {
-    max-height: 300px;
-    width:      1388px;
-    overflow-y: scroll;
-    overflow-x: scroll;
-    padding-bottom: 5px;
-    background-clip: content-box;
-    border-radius: 2px;
-    margin-left: 5px;
-    align-self: center;
-}
-
 .tableSection::-webkit-scrollbar {
     width: 10px;
     height: 10px;
@@ -420,11 +425,11 @@ moveLoadingWidth {
 }
 
 .adjuste{
-    margin-top: 1.95rem;
+    margin-top: 0px;
 }
 
 .trLoading {
     margin: 0 auto;
     text-align: center;
-
 }
+
