@@ -140,4 +140,27 @@ footer section p{
     main{
         
     }
+
+    section{
+        height: 40%;
+    }
+
+    button{
+        height: 100%;
+        font-size: 3rem;
+    }
+
+    button:hover{
+        transform: scale(1.01);
+    }
+
+    #buttonsCima button{
+        font-size: 3.6rem;
+        font-weight: 600;
+    }
+}
+
+@keyframes animation{
+0%{}
+100%{}
 }
