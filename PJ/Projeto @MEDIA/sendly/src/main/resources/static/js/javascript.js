@@ -76,8 +76,7 @@ form.addEventListener('submit', async (e) => {
     const dados = new FormData(form);
 
     //let data = await fetch('http://172.16.0.213:8080/cadastro',{method: 'POST',body: dados});//forma rede local
-    let data = await fetch('https://pwjob-production.up.railway.app/cadastro',{method: 'POST',body: dados});//forma nuvem
-
+    let data = await fetch('https://pwjob-production-1606.up.railway.app/cadastro',{method: 'POST',body: dados});//forma nuvem
     //Passo 3
     //TRATAR API
 
@@ -87,10 +86,13 @@ form.addEventListener('submit', async (e) => {
     //h1.innerHTML = data.email;
 
     //Se Recebido ou Não, acontecem:
-
-
+    
     if(data.id){
-        window.location.href = './menuprincipal.html'
+        if(window.innerWidth >= 1200){
+            window.location.href = './menuprincipalDev.html'
+        }else{
+            window.location.href = './menuprincipal.html'
+        }
     }else{
         p.forEach(noLogin => {
             noLogin.innerHTML = data.mensagem;
@@ -98,89 +100,3 @@ form.addEventListener('submit', async (e) => {
         });
     };
 });
-
-
-//-------------------------
-
-
-//Anotar no MySql NUVEM
-//exemplo RailWay
-
-//conexão num banco da nuvem pela internet
-//mysql -h yamabiko.proxy.rlwy.net -u root -p --port 37416 --protocol=TCP railway
-
-
-
-//url genérica de conexão a banco
-//mysql://root:lGCZVMuQwXulGzlgNbzCWKbJttSPKcwL@yamabiko.proxy.rlwy.net:37416/railway
-
-//essa mesma url separada no formato SpringTools
-//spring.datasource.url=jdbc:mysql://@yamabiko.proxy.rlwy.net:37416/railway
-//spring.datasource.username=root
-//spring.datasource.password=lGCZVMuQwXulGzlgNbzCWKbJttSPKcwL
-
-
-
-
-
-//-------------------------
-
-
-
-
-//Anotar Deploy Netlify
-
-//Somente Front, hospedagem na Nuvem, base directory
-//???
-
-
-
-//Base Directory
-//PJ/Projeto @MEDIA/sendly/src/main/resources/static
-
-
-
-//-------------------------
-
-
-
-
-//Anotar Deploy Railway BACKEND
-
-//Projeto Spring inteiro, hospedagem na Nuvem, base directory
-//???
-
-
-
-//Root Directory
-//PJ/Projeto @MEDIA/sendly
-
-//--
-
-//O novo fetch da nuvem deve ser adquirido no Railway:
-//em Projeto>Settings>Networking>Public Networking
-
-//http://pwjob-production.up.railway.app/teste?email=${email}
-//ou
-//http://pwjob-production.up.railway.app/cadastro
-
-//obs: Substitua 172.16.0.213:8080 por pwjob-production.up.railway.app no javaScript.
-//obs: E o application.properties não deve ser 8080.
-//obs: o fetch passa a requisitar https e não mais http.
-
-
-
-//-------------------------
-
-//Anotar Deploy Railway BANCO
-
-//Projeto Spring inteiro, hospedagem na Nuvem, base directory
-//???
-
-//
-
-
-
-//-------------------------
-
-//Anotar sobre CORS e HTTPS/HTTP
