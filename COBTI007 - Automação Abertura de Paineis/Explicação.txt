@@ -1,0 +1,7 @@
+
+HOSPEDAR OS PAINÉIS
+Apenas precisa executar o .bat verifica_e_hospedaPaineisFeitos dentro do servidor remoto vo-coruja-06, como administrador e dentro do disco C:.
+
+
+TERMINAR OS PAINÉIS
+Apenas precisa executar o .bat derruba_paineis dentro do servidor remoto vo-coruja-06, como administrador e dentro do disco C:.

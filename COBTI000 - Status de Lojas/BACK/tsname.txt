@@ -1,0 +1,1 @@
+spring.datasource.url=jdbc:oracle:thin:@//10.110.167.188:1521/cbrms_4pw_gru.subnetexadatali.vcnexadataocisp.oraclevcn.com

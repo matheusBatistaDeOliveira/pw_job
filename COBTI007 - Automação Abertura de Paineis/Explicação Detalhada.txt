@@ -1,0 +1,32 @@
+É um arquivo .bat que abre o CMD e executa os dois comandos necessários para hospedar os painéis, cd "CaminhoDaPastaDoProjeto" 
+e mvnw.cmd spring-boot:run. O caminho do arquivo existe somente no servidor remoto coruja, portanto só pode ser executado de 
+forma funcional lá. O arquivo .bat se encontra na pasta TI de downloads dentro do servidor coruja e nesta pasta COBTI016.
+
+
+A Automação sem executar ocorre pelo gerenciador de tarefas do Windows, onde digo para executar o .bat como administrador assim que o Windows inicia.
+Para verificar a tarefa e sua execução, apenas entre na barra de pesquisa e pesquise por "Agendador de Tarefas" dentro do 
+servidor remoto coruja e procure por tarefas ativas.
+
+
+OBSERVAÇÃO
+Caso queia adicionar outros painéis na automação, basta adicionar outra linha de código com o novo caminho do novo projeto PAINEL WEB:
+cd "CaminhoDaPastaDoProjeto", mantendo todo o resto da linha idêntica. O derruba_paineis também, apenas trocar a porta no .bat.
+
+
+----------------------------------------------------------------------------------------------------------------------
+
+HOSPEDAR OS PAINÉIS
+Apenas precisa executar o .bat verifica_e_hospedaPaineisFeitos dentro do servidor remoto vo-coruja-06, como administrador e dentro do disco C:.
+
+
+TERMINAR OS PAINÉIS
+Apenas precisa executar o .bat derruba_paineis dentro do servidor remoto vo-coruja-06, como administrador e dentro do disco C:.
+
+---------------------------------------------------------------------------------------------------------------------
+
+OBSERVAÇÕES
+*EM CASO DE ERRO NA INICIALIZAÇÃO AUTOMÁTICA, apenas execute o derruba_paineis e depois verifica_e_hospedaPaineisFeitos, 
+dentro do vo-coruja-06 e como administrador.
+
+*Caso queira adicionar outros painéis na automação, basta adicionar outra linha de código com o novo caminho do novo projeto PAINEL WEB:
+cd "CaminhoDaPastaDoProjeto", mantendo todo o resto da linha idêntica.
